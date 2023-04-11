@@ -28,12 +28,14 @@ export default function Register() {
         });
         fetch("http://localhost:5000/auth/register", {
             method: "POST",
-              headers: {
-        "Content-Type": "application/json",
-      },
+            headers: {
+                "Content-Type": "application/json",
+            },
             body: register,
         })
-            .then((response) => response.text())
+            .then((response) => response.text()).then(() => {
+            navigate("/auth/login");
+        })
             .catch((error) => {
                 console.log("error", error);
             });

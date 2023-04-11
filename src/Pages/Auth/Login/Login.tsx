@@ -27,7 +27,7 @@ function Login() {
             email: data.get('email'),
             password: data.get('password'),
         });
-        await fetch('http://localhost:5000/auth/login', {
+        await fetch("http://localhost:5000/auth/login", {
             method: "POST",
             headers: myHeaders,
             body: raw,
@@ -35,7 +35,8 @@ function Login() {
             credentials: "include",
         })
             .then((response) => response.text())
-            .then(() => {
+            .then((data) => {
+                console.log(data);
                 navigate("/");
             })
             .catch((error) => {
