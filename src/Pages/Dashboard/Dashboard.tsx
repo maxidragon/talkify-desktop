@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import {useNavigate} from "react-router-dom";
-import {useCallback, useEffect} from "react";
+import {useEffect} from "react";
 
 
 function Dashboard() {
@@ -9,18 +9,13 @@ function Dashboard() {
 
     async function fetchConversations() {
         try {
-            // @ts-ignore
-            const jwtToken = document.cookie.split('; ')
-                .find(row => row.startsWith('jwt='))
-                .split('=')[1];
-
             const response = await fetch("http://localhost:5000/message/conversations", {
                 method: "GET",
                 headers: {
-                    Authorization: `Bearer ${jwtToken}`,
                     "Content-Type": "application/json"
                 },
                 credentials: "include",
+                redirect: "follow",
             });
 
             const data = await response.json();
@@ -37,7 +32,7 @@ function Dashboard() {
 
     useEffect(() => {
         fetchConversations();
-    }, []);
+    }, [fetchConversations]);
     return (
         <Grid container spacing={3}>
 
