@@ -7,6 +7,7 @@ import Register from './Pages/Auth/Register/Register';
 import Login from './Pages/Auth/Login/Login';
 import DashboardLayout from './Layout/DashboardLayout';
 import Dashboard from './Pages/Dashboard/Dashboard';
+import Conversation from './Pages/Conversation/Conversation';
 
 const router = createBrowserRouter([
     // {
@@ -23,7 +24,11 @@ const router = createBrowserRouter([
     },
     {
         path: "/",
-        element: <DashboardLayout children={<Dashboard />} />,
+        element: <DashboardLayout children={<Dashboard/>}/>,
+    },
+    {
+        path: "conversation/:conversationId",
+        element: <DashboardLayout children={<Conversation />}/>,
     },
 ]);
 
