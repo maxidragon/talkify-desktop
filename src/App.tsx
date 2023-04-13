@@ -8,6 +8,7 @@ import Login from './Pages/Auth/Login/Login';
 import DashboardLayout from './Layout/DashboardLayout';
 import Dashboard from './Pages/Dashboard/Dashboard';
 import Conversation from './Pages/Conversation/Conversation';
+import {createTheme, ThemeProvider} from '@mui/material/styles';
 
 const router = createBrowserRouter([
     // {
@@ -28,15 +29,26 @@ const router = createBrowserRouter([
     },
     {
         path: "conversation/:conversationId",
-        element: <DashboardLayout children={<Conversation />}/>,
+        element: <DashboardLayout children={<Conversation/>}/>,
     },
 ]);
+const darkTheme = createTheme({
+    palette: {
+        mode: 'dark',
+        primary: {
+            main: '#1C1F20',
+        },
+        secondary: {
+            main: '#f48fb1',
+        },
+    },
+});
 
 function App() {
     return (
-        <div>
+        <ThemeProvider theme={darkTheme}>
             <RouterProvider router={router}/>
-        </div>
+        </ThemeProvider>
     );
 }
 

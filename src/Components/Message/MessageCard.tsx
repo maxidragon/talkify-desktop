@@ -22,7 +22,7 @@ const MessageCard = (props: any) => {
                 height: 32,
                 marginRight: 1.5,
                 marginLeft: 2,
-                marginTop: 'auto',
+                marginTop: 2.5,
                 marginBottom: 'auto'
             }}/>
             <CardContent sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>

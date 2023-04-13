@@ -1,9 +1,12 @@
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {useParams} from "react-router-dom";
 import MessageCard from "../../Components/Message/MessageCard";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-
+import classes from "./Conversation.module.css";
+import PeopleIcon from '@mui/icons-material/People';
+import Box from "@mui/material/Box";
+import ConversationMembers from "../../Components/Members/ConversationMembers";
 interface Conversation {
     id: number;
     name: string;
@@ -24,8 +27,10 @@ interface User {
 
 const Conversation = () => {
     const {conversationId} = useParams();
+    const messageContainerRef = useRef<HTMLDivElement>(null);
     const [conversation, setConversation] = useState<Conversation | null>(null);
     const [message, setMessage] = useState<string>("");
+
     const fetchMessages = useCallback(
         async function fetchMessages() {
             try {
@@ -44,7 +49,11 @@ const Conversation = () => {
                 console.error(error);
             }
         }, []);
-
+    useEffect(() => {
+        if (messageContainerRef.current) {
+            messageContainerRef.current.scrollTo(0, messageContainerRef.current.scrollHeight);
+        }
+    }, [conversation]);
     useEffect(() => {
         fetchMessages();
     }, []);
@@ -53,7 +62,7 @@ const Conversation = () => {
         try {
             if (message.trim() === "") return;
             if (!conversation) return;
-            const response = await fetch(`http://localhost:5000/message/send`, {
+            await fetch(`http://localhost:5000/message/send`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -65,18 +74,46 @@ const Conversation = () => {
                 credentials: "include",
                 redirect: "follow",
             });
-            const data = await response.json();
-            fetchMessages();
+            setMessage("");
+            await fetchMessages();
         } catch (error) {
             console.error(error);
         }
     }
-
+    async function getConversationMembers() {
+        try {
+            if (!conversation) return;
+            const response = await fetch(`http://localhost:5000/message/conversation/${conversation?.id}/members`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                redirect: "follow",
+            });
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error(error);
+        }
+    }
     return (
         <div>
-            {conversation?.messages.map((message: any) => (
-                <MessageCard author={message.sender.username} content={message.content} timestamp={message.sendTime}/>
-            ))}
+            <Box sx={{marginBottom: 5}}>
+                <ConversationMembers handleGetMembers={getConversationMembers} />
+                <Button variant="outlined" color="secondary" sx={{marginRight: 2}} startIcon={<PeopleIcon/>}>
+                    Add member
+                </Button>
+                <Button variant="outlined" color="secondary" sx={{marginRight: 2}} startIcon={<PeopleIcon/>}>
+                    Delete conversation
+                </Button>
+            </Box>
+            <div className={classes.messageContainer} ref={messageContainerRef}>
+                {conversation?.messages.map((message: any) => (
+                    <MessageCard author={message.sender.username} content={message.content}
+                                 timestamp={message.sendTime}/>
+                ))}
+            </div>
             <TextField
                 label="Message"
                 value={message}

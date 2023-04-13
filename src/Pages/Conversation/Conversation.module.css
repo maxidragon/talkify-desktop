@@ -1,0 +1,5 @@
+.messageContainer {
+    max-height: 500px;
+    overflow: auto;
+    scroll-behavior: smooth;
+}

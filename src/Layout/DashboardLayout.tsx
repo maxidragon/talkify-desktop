@@ -3,7 +3,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
-import {createTheme, ThemeProvider} from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import {useCallback, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
@@ -13,7 +12,6 @@ import Avatar from '@mui/material/Avatar';
 import CreateIcon from '@mui/icons-material/Create';
 import IconButton from '@mui/material/IconButton';
 
-const mdTheme = createTheme();
 
 
 const DashboardLayout = ({children}: any) => {
@@ -51,7 +49,6 @@ const DashboardLayout = ({children}: any) => {
 
 
     return (
-        <ThemeProvider theme={mdTheme}>
             <Box sx={{display: 'flex'}}>
                 <CssBaseline/>
                 <Paper square sx={{pb: '50px', width: 300}}>
@@ -89,12 +86,11 @@ const DashboardLayout = ({children}: any) => {
                     }}
                 >
                     <Toolbar/>
-                    <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
+                    <Container maxWidth="lg">
                         {children}
                     </Container>
                 </Box>
             </Box>
-        </ThemeProvider>
     )
 }
 
