@@ -6,8 +6,9 @@ import Button from '@mui/material/Button';
 import classes from "./Conversation.module.css";
 import PeopleIcon from '@mui/icons-material/People';
 import Box from "@mui/material/Box";
-import ConversationMembers from "../../Components/Members/ConversationMembers";
-interface Conversation {
+import ConversationMembers from "../../Components/ModalComponents/ConversationMembers";
+import MemberSearchBar from "../../Components/MemberSearchBar";
+interface IConversation {
     id: number;
     name: string;
     messages: Message[];
@@ -28,13 +29,13 @@ interface User {
 const Conversation = () => {
     const {conversationId} = useParams();
     const messageContainerRef = useRef<HTMLDivElement>(null);
-    const [conversation, setConversation] = useState<Conversation | null>(null);
+    const [conversation, setConversation] = useState<IConversation | null>(null);
     const [message, setMessage] = useState<string>("");
-
+    const [searchBar, showSearchBar] = useState(false);
     const fetchMessages = useCallback(
         async function fetchMessages() {
             try {
-                const response = await fetch(`http://localhost:5000/message/conversation/${conversationId}`, {
+                const response = await fetch(`http://localhost:5000/conversation/${conversationId}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json"
@@ -83,7 +84,7 @@ const Conversation = () => {
     async function getConversationMembers() {
         try {
             if (!conversation) return;
-            const response = await fetch(`http://localhost:5000/message/conversation/${conversation?.id}/members`, {
+            const response = await fetch(`http://localhost:5000/conversation/${conversation?.id}/members`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -97,11 +98,16 @@ const Conversation = () => {
             console.error(error);
         }
     }
+    function toggleSearchBar() {
+        showSearchBar(!searchBar);
+    };
     return (
         <div>
             <Box sx={{marginBottom: 5}}>
+                {searchBar ? <MemberSearchBar /> : null}
                 <ConversationMembers handleGetMembers={getConversationMembers} />
-                <Button variant="outlined" color="secondary" sx={{marginRight: 2}} startIcon={<PeopleIcon/>}>
+
+                <Button variant="outlined" color="secondary" sx={{marginRight: 2}} startIcon={<PeopleIcon/>} onClick={toggleSearchBar}>
                     Add member
                 </Button>
                 <Button variant="outlined" color="secondary" sx={{marginRight: 2}} startIcon={<PeopleIcon/>}>

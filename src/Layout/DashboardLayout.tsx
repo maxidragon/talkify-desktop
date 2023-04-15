@@ -21,7 +21,7 @@ const DashboardLayout = ({children}: any) => {
     const fetchConversations = useCallback(
         async function fetchConversations() {
             try {
-                const response = await fetch("http://localhost:5000/message/conversations", {
+                const response = await fetch("http://localhost:5000/conversation", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json"
@@ -51,7 +51,7 @@ const DashboardLayout = ({children}: any) => {
     return (
             <Box sx={{display: 'flex'}}>
                 <CssBaseline/>
-                <Paper square sx={{pb: '50px', width: 300}}>
+                <Paper square sx={{pb: '50px', width: 400}}>
                     <Typography variant="h5" gutterBottom component="div" sx={{p: 2, pb: 0}}>
                         Talkify
                         <IconButton aria-label="delete">

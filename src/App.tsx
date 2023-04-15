@@ -46,9 +46,9 @@ const darkTheme = createTheme({
 
 function App() {
     return (
-        <ThemeProvider theme={darkTheme}>
             <RouterProvider router={router}/>
-        </ThemeProvider>
+        // <ThemeProvider theme={darkTheme}>
+        // </ThemeProvider>
     );
 }
 
