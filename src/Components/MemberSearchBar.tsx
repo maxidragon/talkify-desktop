@@ -24,6 +24,23 @@ export default function ConversationMembers(props: any) {
             .then((res) => res.json())
             .then((json) => setUsers(json));
     };
+    const addUser = async (userId: any) => {
+        await fetch(`http://localhost:5000/conversation/add/`, {
+            method: "POST",
+            credentials: "include",
+             headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                conversationId: +props.conversationId,
+                userId: userId
+            })
+        }).then((res) => {
+            if (res.status === 200) {
+                props.fetchMembers();
+            }
+        });
+    };
     return (
         <Autocomplete
             disablePortal
@@ -36,7 +53,10 @@ export default function ConversationMembers(props: any) {
                     <ListItem
                         key={option.id}
                         secondaryAction={
-                            <IconButton aria-label="delete">
+                            <IconButton aria-label="delete" onClick={(event) => {
+                                addUser(option.id);
+                            }
+                            }>
                                 <AddIcon/>
                             </IconButton>
                         }

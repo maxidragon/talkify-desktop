@@ -104,7 +104,7 @@ const Conversation = () => {
     return (
         <div>
             <Box sx={{marginBottom: 5}}>
-                {searchBar ? <MemberSearchBar /> : null}
+                {searchBar ? <MemberSearchBar conversationId={conversationId} /> : null}
                 <ConversationMembers handleGetMembers={getConversationMembers} />
 
                 <Button variant="outlined" color="secondary" sx={{marginRight: 2}} startIcon={<PeopleIcon/>} onClick={toggleSearchBar}>
