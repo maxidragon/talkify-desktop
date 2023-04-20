@@ -9,9 +9,7 @@ import {useNavigate} from "react-router-dom";
 import {ListItem, ListItemAvatar, Paper, Typography} from "@mui/material";
 import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
-import CreateIcon from '@mui/icons-material/Create';
-import IconButton from '@mui/material/IconButton';
-
+import CreateConversation from "../Components/ModalComponents/CreateConversation";
 
 
 const DashboardLayout = ({children}: any) => {
@@ -49,48 +47,46 @@ const DashboardLayout = ({children}: any) => {
 
 
     return (
-            <Box sx={{display: 'flex'}}>
-                <CssBaseline/>
-                <Paper square sx={{pb: '50px', width: 400}}>
-                    <Typography variant="h5" gutterBottom component="div" sx={{p: 2, pb: 0}}>
-                        Talkify
-                        <IconButton aria-label="delete">
-                            <CreateIcon/>
-                        </IconButton>
-                    </Typography>
-                    <List sx={{mb: 2}}>
-                        {conversations.map((conversation: any) => (
-                            <React.Fragment key={conversation.conversation.id}>
-                                <ListItem button onClick={() => {
-                                    navigate(`/conversation/${conversation.conversation.id}`);
-                                }}>
-                                    <ListItemAvatar>
-                                        <Avatar alt="Profile Picture"/>
-                                    </ListItemAvatar>
-                                    <ListItemText primary={conversation.conversation.name}/>
-                                </ListItem>
-                            </React.Fragment>
-                        ))}
-                    </List>
-                </Paper>
-                <Box
-                    component="main"
-                    sx={{
-                        backgroundColor: (theme) =>
-                            theme.palette.mode === 'light'
-                                ? theme.palette.grey[100]
-                                : theme.palette.grey[900],
-                        flexGrow: 1,
-                        height: '100vh',
-                        overflow: 'auto',
-                    }}
-                >
-                    <Toolbar/>
-                    <Container maxWidth="lg">
-                        {children}
-                    </Container>
-                </Box>
+        <Box sx={{display: 'flex'}}>
+            <CssBaseline/>
+            <Paper square sx={{pb: '50px', width: 400}}>
+                <Typography variant="h5" gutterBottom component="div" sx={{p: 2, pb: 0}}>
+                    Talkify
+                    <CreateConversation/>
+                </Typography>
+                <List sx={{mb: 2}}>
+                    {conversations.map((conversation: any) => (
+                        <React.Fragment key={conversation.conversation.id}>
+                            <ListItem button onClick={() => {
+                                navigate(`/conversation/${conversation.conversation.id}`);
+                            }}>
+                                <ListItemAvatar>
+                                    <Avatar alt="Profile Picture"/>
+                                </ListItemAvatar>
+                                <ListItemText primary={conversation.conversation.name}/>
+                            </ListItem>
+                        </React.Fragment>
+                    ))}
+                </List>
+            </Paper>
+            <Box
+                component="main"
+                sx={{
+                    backgroundColor: (theme) =>
+                        theme.palette.mode === 'light'
+                            ? theme.palette.grey[100]
+                            : theme.palette.grey[900],
+                    flexGrow: 1,
+                    height: '100vh',
+                    overflow: 'auto',
+                }}
+            >
+                <Toolbar/>
+                <Container maxWidth="lg">
+                    {children}
+                </Container>
             </Box>
+        </Box>
     )
 }
 

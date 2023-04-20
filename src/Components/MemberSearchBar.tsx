@@ -44,7 +44,6 @@ export default function ConversationMembers(props: any) {
     return (
         <Autocomplete
             disablePortal
-            id="combo-box-demo"
             options={users}
             sx={{width: 300}}
             getOptionLabel={(option: any) => option.username}

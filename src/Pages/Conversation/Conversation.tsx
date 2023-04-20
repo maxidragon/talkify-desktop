@@ -8,6 +8,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import Box from "@mui/material/Box";
 import ConversationMembers from "../../Components/ModalComponents/ConversationMembers";
 import MemberSearchBar from "../../Components/MemberSearchBar";
+
 interface IConversation {
     id: number;
     name: string;
@@ -32,6 +33,7 @@ const Conversation = () => {
     const [conversation, setConversation] = useState<IConversation | null>(null);
     const [message, setMessage] = useState<string>("");
     const [searchBar, showSearchBar] = useState(false);
+    const [messagesLoaded, setMessagesLoaded] = useState(false);
     const fetchMessages = useCallback(
         async function fetchMessages() {
             try {
@@ -46,18 +48,23 @@ const Conversation = () => {
                 const data = await response.json();
                 console.log(data);
                 setConversation(data);
+                setMessagesLoaded(true);
             } catch (error) {
                 console.error(error);
             }
-        }, []);
+        }, [conversationId]);
+
+
     useEffect(() => {
         if (messageContainerRef.current) {
             messageContainerRef.current.scrollTo(0, messageContainerRef.current.scrollHeight);
         }
     }, [conversation]);
     useEffect(() => {
+        setMessagesLoaded(false);
         fetchMessages();
-    }, []);
+    }, [conversationId]);
+
 
     async function handleSendMessage() {
         try {
@@ -81,6 +88,7 @@ const Conversation = () => {
             console.error(error);
         }
     }
+
     async function getConversationMembers() {
         try {
             if (!conversation) return;
@@ -98,16 +106,18 @@ const Conversation = () => {
             console.error(error);
         }
     }
+
     function toggleSearchBar() {
         showSearchBar(!searchBar);
     };
     return (
         <div>
             <Box sx={{marginBottom: 5}}>
-                {searchBar ? <MemberSearchBar conversationId={conversationId} /> : null}
-                <ConversationMembers handleGetMembers={getConversationMembers} />
+                {searchBar ? <MemberSearchBar conversationId={conversationId}/> : null}
+                <ConversationMembers handleGetMembers={getConversationMembers}/>
 
-                <Button variant="outlined" color="secondary" sx={{marginRight: 2}} startIcon={<PeopleIcon/>} onClick={toggleSearchBar}>
+                <Button variant="outlined" color="secondary" sx={{marginRight: 2}} startIcon={<PeopleIcon/>}
+                        onClick={toggleSearchBar}>
                     Add member
                 </Button>
                 <Button variant="outlined" color="secondary" sx={{marginRight: 2}} startIcon={<PeopleIcon/>}>
