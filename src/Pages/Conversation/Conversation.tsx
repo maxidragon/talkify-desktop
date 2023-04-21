@@ -34,10 +34,11 @@ const Conversation = () => {
     const [message, setMessage] = useState<string>("");
     const [searchBar, showSearchBar] = useState(false);
     const [messagesLoaded, setMessagesLoaded] = useState(false);
+    const [take, setTake] = useState(10);
     const fetchMessages = useCallback(
-        async function fetchMessages() {
+        async function fetchMessages(paramTake: number) {
             try {
-                const response = await fetch(`http://localhost:5000/conversation/${conversationId}`, {
+                const response = await fetch(`http://localhost:5000/conversation/${conversationId}?skip=0&take=${paramTake}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json"
@@ -56,13 +57,13 @@ const Conversation = () => {
 
 
     useEffect(() => {
-        if (messageContainerRef.current) {
+        if (messageContainerRef.current && take === 10) {
             messageContainerRef.current.scrollTo(0, messageContainerRef.current.scrollHeight);
         }
     }, [conversation]);
     useEffect(() => {
         setMessagesLoaded(false);
-        fetchMessages();
+        fetchMessages(10);
     }, [conversationId]);
 
 
@@ -83,7 +84,7 @@ const Conversation = () => {
                 redirect: "follow",
             });
             setMessage("");
-            await fetchMessages();
+            await fetchMessages(10);
         } catch (error) {
             console.error(error);
         }
@@ -100,8 +101,7 @@ const Conversation = () => {
                 credentials: "include",
                 redirect: "follow",
             });
-            const data = await response.json();
-            return data;
+            return await response.json();
         } catch (error) {
             console.error(error);
         }
@@ -109,6 +109,10 @@ const Conversation = () => {
 
     function toggleSearchBar() {
         showSearchBar(!searchBar);
+    };
+    const loadMoreMessages = () => {
+        setTake(take + 10);
+        fetchMessages(take + 10);
     };
     return (
         <div>
@@ -125,6 +129,7 @@ const Conversation = () => {
                 </Button>
             </Box>
             <div className={classes.messageContainer} ref={messageContainerRef}>
+                <Button variant="outlined" onClick={loadMoreMessages}>Load more messages</Button>
                 {conversation?.messages.map((message: any) => (
                     <MessageCard author={message.sender.username} content={message.content}
                                  timestamp={message.sendTime}/>

@@ -10,6 +10,8 @@ import {ListItem, ListItemAvatar, Paper, Typography} from "@mui/material";
 import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
 import CreateConversation from "../Components/ModalComponents/CreateConversation";
+import SettingsIcon from '@mui/icons-material/Settings';
+import IconButton from "@mui/material/IconButton";
 
 
 const DashboardLayout = ({children}: any) => {
@@ -53,6 +55,9 @@ const DashboardLayout = ({children}: any) => {
                 <Typography variant="h5" gutterBottom component="div" sx={{p: 2, pb: 0}}>
                     Talkify
                     <CreateConversation/>
+                    <IconButton>
+                        <SettingsIcon/>
+                    </IconButton>
                 </Typography>
                 <List sx={{mb: 2}}>
                     {conversations.map((conversation: any) => (

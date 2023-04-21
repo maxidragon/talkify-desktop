@@ -57,7 +57,7 @@ export default function CreateConversation(props: any) {
     const handleClose = () => setOpen(false);
 
     return (
-        <div>
+        <>
             <IconButton aria-label="delete" onClick={handleOpen}>
                 <CreateIcon/>
             </IconButton>
@@ -72,6 +72,6 @@ export default function CreateConversation(props: any) {
                     <Button onClick={createConversation}>Create</Button>
                 </Box>
             </Modal>
-        </div>
+        </>
     );
 }
