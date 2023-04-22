@@ -2,10 +2,10 @@ import Box from '@mui/material/Box';
 import CreateIcon from '@mui/icons-material/Create';
 import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
-import {useCallback, useRef, useState} from "react";
+import {useCallback, useState} from "react";
 import * as React from "react";
 import {useNavigate} from "react-router-dom";
-import {Button, TextField} from "@mui/material";
+import {Button, TextField, Grid, Typography} from "@mui/material";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -66,10 +66,19 @@ export default function CreateConversation(props: any) {
                 onClose={handleClose}
             >
                 <Box sx={style}>
-                    <TextField id="outlined-basic" label="Name" variant="outlined" onChange={(event) => {
-                        setName(event.target.value);
-                    }}/>
-                    <Button onClick={createConversation}>Create</Button>
+                    <Grid container direction="column"  spacing={2}>
+                        <Grid item>
+                            <Typography variant="h5">Create conversation</Typography>
+                        </Grid>
+                        <Grid item>
+                            <TextField id="outlined-basic" label="Name" variant="outlined" onChange={(event) => {
+                                setName(event.target.value);
+                            }}/>
+                        </Grid>
+                        <Grid item>
+                            <Button onClick={createConversation} variant="contained">Create</Button>
+                        </Grid>
+                    </Grid>
                 </Box>
             </Modal>
         </>
