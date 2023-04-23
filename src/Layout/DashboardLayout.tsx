@@ -55,7 +55,11 @@ const DashboardLayout = ({children}: any) => {
                 <Typography variant="h5" gutterBottom component="div" sx={{p: 2, pb: 0}}>
                     Talkify
                     <CreateConversation/>
-                    <IconButton>
+                    <IconButton onClick={(event: any) => {
+                        event.preventDefault();
+                        navigate("/settings");
+                    }
+                    }>
                         <SettingsIcon/>
                     </IconButton>
                 </Typography>

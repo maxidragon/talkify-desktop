@@ -8,6 +8,7 @@ import Login from './Pages/Auth/Login/Login';
 import DashboardLayout from './Layout/DashboardLayout';
 import Dashboard from './Pages/Dashboard/Dashboard';
 import Conversation from './Pages/Conversation/Conversation';
+import Settings from './Pages/Settings/Settings';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 
 const router = createBrowserRouter([
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
         path: "conversation/:conversationId",
         element: <DashboardLayout children={<Conversation/>}/>,
     },
+    {
+        path: "settings/",
+        element: <DashboardLayout children={<Settings/>}/>,
+    }
 ]);
 const darkTheme = createTheme({
     palette: {
