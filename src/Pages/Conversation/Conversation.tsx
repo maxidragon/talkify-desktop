@@ -132,7 +132,7 @@ const Conversation = () => {
                 <Button variant="outlined" onClick={loadMoreMessages}>Load more messages</Button>
                 {conversation?.messages.map((message: any) => (
                     <MessageCard author={message.sender.username} content={message.content}
-                                 timestamp={message.sendTime}/>
+                                 timestamp={message.sendTime} isOwned={message.isOwned} id={message.id} fetchMessages={fetchMessages}/>
                 ))}
             </div>
             <TextField

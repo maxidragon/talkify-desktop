@@ -1,9 +1,11 @@
 import React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Avatar from '@mui/material/Avatar';
+import DeleteConfirmation from "../ModalComponents/DeleteConfirmation";
 
 const MessageCard = (props: any) => {
     const formatDate = (date: Date) => {
@@ -14,7 +16,7 @@ const MessageCard = (props: any) => {
         const minutes = String(date.getMinutes()).padStart(2, '0');
         return `${year}-${month}-${day} ${hours}:${minutes}`;
     };
-  const formattedTimestamp = formatDate(new Date(props.timestamp));
+    const formattedTimestamp = formatDate(new Date(props.timestamp));
     return (
         <Card sx={{display: 'flex', marginBottom: 1}}>
             <Avatar alt="avatar" sx={{
@@ -32,6 +34,11 @@ const MessageCard = (props: any) => {
                 </Typography>
                 <Typography variant="body1">{props.content}</Typography>
             </CardContent>
+            <Box marginLeft="auto" sx={{marginRight: 2}}>
+                {props.isOwned ? (
+                    <DeleteConfirmation id={props.id}/>
+                ) : <></>}
+            </Box>
             <Divider sx={{margin: 0, height: '100%', alignSelf: 'stretch'}}/>
         </Card>
     );
