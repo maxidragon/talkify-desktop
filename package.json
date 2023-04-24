@@ -30,8 +30,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electron": "electron .",
-    "electron-build": "npm run build && electron ."
+     "tauri": "tauri"
   },
   "eslintConfig": {
     "extends": [
@@ -52,6 +51,6 @@
     ]
   },
   "devDependencies": {
-    "electron": "^24.0.0"
+    "@tauri-apps/cli": "^1.2.3"
   }
 }
