@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import {useState} from "react";
 import PeopleIcon from "@mui/icons-material/People";
-import {ListItem, ListItemAvatar} from "@mui/material";
+import {IconButton, ListItem, ListItemAvatar} from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import ListItemText from "@mui/material/ListItemText";
 import * as React from "react";
@@ -23,6 +23,7 @@ const style = {
 export default function ConversationMembers(props: any) {
     const [open, setOpen] = useState(false);
     const [members, setMembers] = useState([]);
+
     async function handleOpen() {
         setOpen(true)
         console.log(props.handleGetMembers());
@@ -32,10 +33,11 @@ export default function ConversationMembers(props: any) {
 
     return (
         <div>
-            <Button variant="outlined" color="secondary" sx={{marginRight: 2}} startIcon={<PeopleIcon/>}
-                    onClick={handleOpen}>
-                Members
-            </Button>
+            <IconButton size="large"
+                        color="inherit"
+                        onClick={handleOpen}>
+                <PeopleIcon/>
+            </IconButton>
             <Modal
                 open={open}
                 onClose={handleClose}

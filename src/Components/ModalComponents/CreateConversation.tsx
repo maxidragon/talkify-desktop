@@ -28,16 +28,15 @@ export default function CreateConversation(props: any) {
         console.log(props.handleGetMembers());
     };
     const createConversation = useCallback(
-        async function createConversation() {
+        async function createConversation(nameParam: string) {
             try {
-                console.log(name);
                 const response = await fetch("http://localhost:5000/conversation/create", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        name
+                        name: nameParam
                     }),
                     credentials: "include",
                     redirect: "follow",
@@ -47,6 +46,7 @@ export default function CreateConversation(props: any) {
                 if (response.status === 401) {
                     navigate("/auth/login");
                 } else {
+                    handleClose();
                     console.log(data);
                 }
             } catch (error) {
@@ -76,7 +76,9 @@ export default function CreateConversation(props: any) {
                             }}/>
                         </Grid>
                         <Grid item>
-                            <Button onClick={createConversation} variant="contained">Create</Button>
+                            <Button onClick={() => {
+                                createConversation(name);
+                            }} variant="contained">Create</Button>
                         </Grid>
                     </Grid>
                 </Box>

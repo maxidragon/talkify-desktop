@@ -42,6 +42,7 @@ export default function DeleteConfirmation(props: any) {
                     navigate("/auth/login");
                 }
                 else {
+                    props.handleDelete();
                     handleClose();
                 }
             } catch (error) {

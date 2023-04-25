@@ -12,7 +12,7 @@ import Avatar from '@mui/material/Avatar';
 import CreateConversation from "../Components/ModalComponents/CreateConversation";
 import SettingsIcon from '@mui/icons-material/Settings';
 import IconButton from "@mui/material/IconButton";
-
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const DashboardLayout = ({children}: any) => {
     const navigate = useNavigate();
@@ -61,6 +61,13 @@ const DashboardLayout = ({children}: any) => {
                     }
                     }>
                         <SettingsIcon/>
+                    </IconButton>
+                    <IconButton onClick={(event: any) => {
+                        event.preventDefault();
+
+                    }
+                    }>
+                        <LogoutIcon/>
                     </IconButton>
                 </Typography>
                 <List sx={{mb: 2}}>
