@@ -118,17 +118,17 @@ const Conversation = () => {
         setMessage(message + emoji.emoji);
     };
     return (
-        <>
+        <div className={classes.messageSections}>
             <ConversationNavbar conversation={conversation}/>
 
-            <div className={classes.messageContainer} ref={messageContainerRef}>
+            <Box className={classes.messageContainer} ref={messageContainerRef} sx={{width: '100%'}}>
                 <Button variant="outlined" onClick={loadMoreMessages}>Load more messages</Button>
                 {conversation?.messages.map((message: any) => (
                     <MessageCard author={message.sender.username} content={message.content}
                                  timestamp={message.sendTime} isOwned={message.isOwned} id={message.id}
                                  fetchMessages={fetchMessages}/>
                 ))}
-            </div>
+            </Box>
             <Box sx={{position: 'relative'}}>
                 <Paper
                     sx={{p: '2px 4px', display: 'flex', alignItems: 'center', mb: 5}}
@@ -158,7 +158,7 @@ const Conversation = () => {
                     </Box>
                 )}
             </Box>
-        </>
+        </div>
     )
 };
 

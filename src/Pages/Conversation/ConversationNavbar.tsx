@@ -8,12 +8,15 @@ import MenuIcon from '@mui/icons-material/Menu';
 import MemberSearchBar from '../../Components/MemberSearchBar';
 import ConversationMembers from "../../Components/ModalComponents/ConversationMembers";
 import {useState} from "react";
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 const ConversationNavbar = (props: any) => {
     const [searchBar, showSearchBar] = useState(false);
+
     function toggleSearchBar() {
         showSearchBar(!searchBar);
     };
+
     async function getConversationMembers() {
         try {
             if (!props.conversation) return;
@@ -32,7 +35,7 @@ const ConversationNavbar = (props: any) => {
     }
 
     return (
-        <Box sx={{flexGrow: 1, marginBottom: 5, marginTop: -8, marginLeft: -3}}>
+        <Box sx={{flexGrow: 1, marginBottom: 5, marginTop: -8, marginLeft: -3, width: '100%'}}>
             <AppBar position="static">
                 <Toolbar>
                     <IconButton
@@ -48,6 +51,12 @@ const ConversationNavbar = (props: any) => {
                         {props.conversation?.name}
                     </Typography>
                     {searchBar ? <MemberSearchBar conversationId={props.conversation.id}/> : null}
+                    <IconButton color="inherit" onClick={() => {
+                        showSearchBar(!searchBar);
+                    }
+                    }>
+                        <PersonAddIcon/>
+                    </IconButton>
                     <ConversationMembers handleGetMembers={getConversationMembers}/>
                     <IconButton
                         size="large"

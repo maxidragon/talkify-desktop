@@ -3,3 +3,10 @@
     overflow: auto;
     scroll-behavior: smooth;
 }
+
+.messageSection {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow: auto;
+}

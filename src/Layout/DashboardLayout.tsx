@@ -48,6 +48,24 @@ const DashboardLayout = ({children}: any) => {
     }, [fetchConversations]);
 
 
+    const logout = (event: any) => {
+        event.preventDefault();
+        let myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        fetch("http://localhost:5000/auth/logout", {
+            method: "POST",
+            headers: myHeaders,
+            redirect: "follow",
+            credentials: "include",
+        })
+            .then((response) => response.text())
+            .then(() => {
+                navigate("/auth/login")
+            })
+            .catch((error) => console.log("error", error));
+    }
+
     return (
         <Box sx={{display: 'flex'}}>
             <CssBaseline/>
@@ -62,11 +80,7 @@ const DashboardLayout = ({children}: any) => {
                     }>
                         <SettingsIcon/>
                     </IconButton>
-                    <IconButton onClick={(event: any) => {
-                        event.preventDefault();
-
-                    }
-                    }>
+                    <IconButton onClick={logout}>
                         <LogoutIcon/>
                     </IconButton>
                 </Typography>

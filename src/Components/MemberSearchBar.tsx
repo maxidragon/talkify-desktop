@@ -11,7 +11,6 @@ import AddIcon from '@mui/icons-material/Add';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
-
 export default function ConversationMembers(props: any) {
 
     const [users, setUsers] = useState<any>([]);
@@ -41,9 +40,11 @@ export default function ConversationMembers(props: any) {
             }
         });
     };
+
     return (
         <Autocomplete
             disablePortal
+            color="inherit"
             options={users}
             sx={{width: 300}}
             getOptionLabel={(option: any) => option.username}
@@ -72,7 +73,7 @@ export default function ConversationMembers(props: any) {
                     </ListItem>
                 </Box>
             )}
-            renderInput={(params) => <TextField {...params} onChange={fetchUsers} label="Search"/>}
+            renderInput={(params) => <TextField {...params} onChange={fetchUsers} label="Search" sx={{input: {color: 'white'}}}/>}
         />
     );
 }
