@@ -3,10 +3,7 @@ import {useParams} from "react-router-dom";
 import MessageCard from "../../Components/Message/MessageCard";
 import Button from '@mui/material/Button';
 import classes from "./Conversation.module.css";
-import PeopleIcon from '@mui/icons-material/People';
 import Box from "@mui/material/Box";
-import ConversationMembers from "../../Components/ModalComponents/ConversationMembers";
-import MemberSearchBar from "../../Components/MemberSearchBar";
 import EmojiPicker from 'emoji-picker-react';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
@@ -99,10 +96,6 @@ const Conversation = () => {
             console.error(error);
         }
     }
-
-
-
-
     const loadMoreMessages = () => {
         setTake(take + 10);
         fetchMessages(take + 10);
@@ -124,9 +117,8 @@ const Conversation = () => {
             <Box className={classes.messageContainer} ref={messageContainerRef} sx={{width: '100%'}}>
                 <Button variant="outlined" onClick={loadMoreMessages}>Load more messages</Button>
                 {conversation?.messages.map((message: any) => (
-                    <MessageCard author={message.sender.username} content={message.content}
-                                 timestamp={message.sendTime} isOwned={message.isOwned} id={message.id}
-                                 fetchMessages={fetchMessages}/>
+                    <MessageCard message={message}
+                                 fetchMessages={fetchMessages} key={message.id}/>
                 ))}
             </Box>
             <Box sx={{position: 'relative'}}>
