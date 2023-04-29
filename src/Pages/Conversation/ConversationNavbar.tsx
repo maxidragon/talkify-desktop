@@ -8,6 +8,8 @@ import MemberSearchBar from '../../Components/SearchBar/MemberSearchBar';
 import ConversationMembers from "../../Components/ModalComponents/ConversationMembers";
 import {useState} from "react";
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import LogoutIcon from '@mui/icons-material/Logout';
+import LeaveConfirmation from "../../Components/Conversation/LeaveConfirmation";
 
 const ConversationNavbar = (props: any) => {
     const [searchBar, showSearchBar] = useState(false);
@@ -56,6 +58,7 @@ const ConversationNavbar = (props: any) => {
                     }>
                         <PersonAddIcon/>
                     </IconButton>
+                    <LeaveConfirmation conversation={props.conversation}/>
                     <ConversationMembers handleGetMembers={getConversationMembers}/>
                     <IconButton
                         size="large"
