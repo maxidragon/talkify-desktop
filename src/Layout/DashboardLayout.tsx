@@ -6,18 +6,20 @@ import List from '@mui/material/List';
 import Container from '@mui/material/Container';
 import {useCallback, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
-import {ListItem, ListItemAvatar, Paper, Typography} from "@mui/material";
+import {Badge, Divider, ListItem, ListItemAvatar, Paper, Typography} from "@mui/material";
 import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
 import CreateConversation from "../Components/ModalComponents/CreateConversation";
 import SettingsIcon from '@mui/icons-material/Settings';
 import IconButton from "@mui/material/IconButton";
 import LogoutIcon from '@mui/icons-material/Logout';
+import EmailIcon from '@mui/icons-material/Email';
+import Invitations from '../Components/ModalComponents/Invitations';
 
 const DashboardLayout = ({children}: any) => {
     const navigate = useNavigate();
     const [conversations, setConversations] = React.useState([]);
-
+    const [invitationsNumber, setInvationsNumber] = React.useState(0);
     const fetchConversations = useCallback(
         async function fetchConversations() {
             try {
@@ -42,10 +44,33 @@ const DashboardLayout = ({children}: any) => {
                 console.error(error);
             }
         }, []);
+    const fetchInvitationsNumber = useCallback(
+        async function fetchInvitationsNumber() {
+            try {
+                const response = await fetch("http://localhost:5000/conversation/invitations/number", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "include",
+                    redirect: "follow",
+                });
 
+                const data = await response.json();
+                if (response.status === 401) {
+                    navigate("/auth/login");
+                } else {
+                    setInvationsNumber(data);
+                }
+            } catch (error) {
+                navigate("/auth/login");
+                console.error(error);
+            }
+        }, []);
     useEffect(() => {
         fetchConversations();
-    }, [fetchConversations]);
+        fetchInvitationsNumber();
+    }, [fetchConversations, fetchInvitationsNumber]);
 
 
     const logout = (event: any) => {
@@ -80,6 +105,7 @@ const DashboardLayout = ({children}: any) => {
                     }>
                         <SettingsIcon/>
                     </IconButton>
+                    <Invitations invitationsNumber={invitationsNumber}/>
                     <IconButton onClick={logout}>
                         <LogoutIcon/>
                     </IconButton>
@@ -95,6 +121,7 @@ const DashboardLayout = ({children}: any) => {
                                 </ListItemAvatar>
                                 <ListItemText primary={conversation.conversation.name}/>
                             </ListItem>
+                            <Divider/>
                         </React.Fragment>
                     ))}
                 </List>
