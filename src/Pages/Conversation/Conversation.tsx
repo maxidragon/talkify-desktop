@@ -14,6 +14,7 @@ import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import * as React from "react";
 import ConversationNavbar from "./ConversationNavbar";
+import { CircularProgress } from "@mui/material";
 
 interface IConversation {
     id: number;
@@ -45,7 +46,7 @@ const Conversation = () => {
     const fetchMessages = useCallback(
         async function fetchMessages(paramTake: number) {
             try {
-                const response = await fetch(`http://localhost:5000/conversation/${conversationId}?skip=0&take=${paramTake}`, {
+                const response = await fetch(`http://localhost:5000/conversation/messages/${conversationId}?skip=0&take=${paramTake}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json"
@@ -96,6 +97,7 @@ const Conversation = () => {
             console.error(error);
         }
     }
+
     const loadMoreMessages = () => {
         setTake(take + 10);
         fetchMessages(take + 10);
@@ -113,14 +115,15 @@ const Conversation = () => {
     return (
         <div className={classes.messageSections}>
             <ConversationNavbar conversation={conversation}/>
-
-            <Box className={classes.messageContainer} ref={messageContainerRef} sx={{width: '100%'}}>
-                <Button variant="outlined" onClick={loadMoreMessages}>Load more messages</Button>
-                {conversation?.messages.map((message: any) => (
-                    <MessageCard message={message}
-                                 fetchMessages={fetchMessages} key={message.id}/>
-                ))}
-            </Box>
+            {messagesLoaded ? (
+                <Box className={classes.messageContainer} ref={messageContainerRef} sx={{width: '100%'}}>
+                    <Button variant="outlined" onClick={loadMoreMessages}>Load more messages</Button>
+                    {conversation?.messages.map((message: any) => (
+                        <MessageCard message={message}
+                                     fetchMessages={fetchMessages} key={message.id}/>
+                    ))}
+                </Box>
+            ) : <CircularProgress sx={{alignItems: 'center', margin: 'auto', justifyContent: 'center', width: '100%'}} />}
             <Box sx={{position: 'relative'}}>
                 <Paper
                     sx={{p: '2px 4px', display: 'flex', alignItems: 'center', mb: 5}}
