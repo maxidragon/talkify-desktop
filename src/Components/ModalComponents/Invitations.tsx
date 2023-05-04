@@ -111,7 +111,7 @@ export default function Invitations(props: any) {
                             <ListItemAvatar>
                                 <Avatar alt="Profile Picture"/>
                             </ListItemAvatar>
-                            <ListItemText primary={conversation.conversation.name}/>
+                            <ListItemText primary={conversation.conversation.name} secondary={("Invited by " + conversation.addedBy.username)}/>
                             <IconButton onClick={() => {
                                 acceptInvitation(conversation.conversation.id);
                             }}>

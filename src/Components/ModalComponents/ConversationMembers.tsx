@@ -115,16 +115,14 @@ export default function ConversationMembers(props: any) {
                             <ListItemAvatar>
                                 <Avatar alt="Profile Picture"/>
                             </ListItemAvatar>
-
-                            <ListItemText primary={member.user.username}/>
-
+                            {member.isAdmin ? (
+                                    <ListItemText primary={member.user.username} secondary={"Admin"} />
+                                ) : (
+                                <ListItemText primary={member.user.username} secondary={("Added by " + member.addedBy.username)}/>
+                            )}
                             {props.isAdmin ? (
                                 <>
-                                    <IconButton color="inherit" onClick={() => {
-                                        handleDeleteMember(member.user.id);
-                                    }}>
-                                        <DeleteIcon/>
-                                    </IconButton>
+
                                     {member.isAdmin ? (
                                         <IconButton color="inherit" onClick={async () => {
                                             await removeAdmin(member.user.id);
@@ -139,7 +137,11 @@ export default function ConversationMembers(props: any) {
                                         </IconButton>
                                     )
                                     }
-
+                                    <IconButton color="inherit" onClick={() => {
+                                        handleDeleteMember(member.user.id);
+                                    }}>
+                                        <DeleteIcon/>
+                                    </IconButton>
                                 </>
                             ) : <></>}
                         </ListItem>
