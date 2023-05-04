@@ -43,6 +43,7 @@ const Conversation = () => {
     const [messagesLoaded, setMessagesLoaded] = useState(false);
     const [take, setTake] = useState(10);
     const [showPicker, setShowPicker] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
     const fetchMessages = useCallback(
         async function fetchMessages(paramTake: number) {
             try {
@@ -56,6 +57,7 @@ const Conversation = () => {
                 });
                 const data = await response.json();
                 console.log(data);
+                setIsAdmin(data.isAdmin);
                 setConversation(data);
                 setMessagesLoaded(true);
             } catch (error) {
@@ -114,7 +116,7 @@ const Conversation = () => {
     };
     return (
         <div className={classes.messageSections}>
-            <ConversationNavbar conversation={conversation}/>
+            <ConversationNavbar conversation={conversation} isAdmin={isAdmin}/>
             {messagesLoaded ? (
                 <Box className={classes.messageContainer} ref={messageContainerRef} sx={{width: '100%'}}>
                     <Button variant="outlined" onClick={loadMoreMessages}>Load more messages</Button>
