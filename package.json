@@ -17,7 +17,7 @@
     "@types/react": "^18.0.34",
     "@types/react-dom": "^18.0.11",
     "emoji-picker-react": "^4.4.9",
-    "js-cookie": "^3.0.1",
+    "js-cookie": "^3.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-emoji-render": "^2.0.1",
@@ -53,6 +53,7 @@
     ]
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^1.2.3"
+    "@tauri-apps/cli": "^1.2.3",
+    "@types/js-cookie": "^3.0.3"
   }
 }

@@ -10,6 +10,7 @@ import Dashboard from './Pages/Dashboard/Dashboard';
 import Conversation from './Pages/Conversation/Conversation';
 import Settings from './Pages/Settings/Settings';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
+import getUser from "./Lib/User";
 
 const router = createBrowserRouter([
     // {
@@ -40,20 +41,20 @@ const router = createBrowserRouter([
 const darkTheme = createTheme({
     palette: {
         mode: 'dark',
-        primary: {
-            main: '#1C1F20',
-        },
-        secondary: {
-            main: '#f48fb1',
-        },
     },
 });
-
+const lightTheme = createTheme({
+    palette: {
+        mode: 'light',
+    },
+});
 function App() {
+    const user = getUser();
+
     return (
+        <ThemeProvider theme={user.Theme==="dark" ? darkTheme : lightTheme}>
             <RouterProvider router={router}/>
-        // <ThemeProvider theme={darkTheme}>
-        // </ThemeProvider>
+        </ThemeProvider>
     );
 }
 

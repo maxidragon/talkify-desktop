@@ -13,8 +13,9 @@ import CreateConversation from "../Components/ModalComponents/CreateConversation
 import SettingsIcon from '@mui/icons-material/Settings';
 import IconButton from "@mui/material/IconButton";
 import LogoutIcon from '@mui/icons-material/Logout';
-import EmailIcon from '@mui/icons-material/Email';
 import Invitations from '../Components/ModalComponents/Invitations';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import getUser from "../Lib/User";
 
 const DashboardLayout = ({children}: any) => {
     const navigate = useNavigate();
@@ -90,7 +91,33 @@ const DashboardLayout = ({children}: any) => {
             })
             .catch((error) => console.log("error", error));
     }
+    const switchTheme = useCallback(
+        async function switchTheme() {
+            try {
+                const user = getUser();
+                let id = '';
+                if (user.Theme === 'light') {
+                    id = 'dark';
+                } else {
+                    id = 'light';
+                }
+                const response = await fetch(`http://localhost:5000/user/theme/${id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "include",
+                    redirect: "follow",
+                });
 
+                if (response.status === 401) {
+                    navigate("/auth/login");
+                }
+            } catch (error) {
+                navigate("/auth/login");
+                console.error(error);
+            }
+        }, []);
     return (
         <Box sx={{display: 'flex'}}>
             <CssBaseline/>
@@ -106,6 +133,9 @@ const DashboardLayout = ({children}: any) => {
                         <SettingsIcon/>
                     </IconButton>
                     <Invitations invitationsNumber={invitationsNumber}/>
+                    <IconButton onClick={switchTheme}>
+                        <DarkModeIcon/>
+                    </IconButton>
                     <IconButton onClick={logout}>
                         <LogoutIcon/>
                     </IconButton>
