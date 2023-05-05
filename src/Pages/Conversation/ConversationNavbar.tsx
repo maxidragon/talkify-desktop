@@ -31,7 +31,7 @@ const ConversationNavbar = (props: any) => {
     }
 
     return (
-        <Box sx={{flexGrow: 1, marginBottom: 5, marginTop: -8, marginLeft: -3, width: '100%'}}>
+        <Box sx={{flexGrow: 1, marginBottom: 5, marginTop: -8, marginLeft: "-17%"}}>
             <AppBar position="static">
                 <Toolbar>
                     <IconButton

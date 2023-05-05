@@ -121,7 +121,7 @@ const DashboardLayout = ({children}: any) => {
     return (
         <Box sx={{display: 'flex'}}>
             <CssBaseline/>
-            <Paper square sx={{pb: '50px', width: 400}}>
+            <Paper square sx={{pb: '50px', width: '20%'}}>
                 <Typography variant="h5" gutterBottom component="div" sx={{p: 2, pb: 0}}>
                     Talkify
                     <CreateConversation/>
@@ -168,8 +168,8 @@ const DashboardLayout = ({children}: any) => {
                     overflow: 'auto',
                 }}
             >
-                <Toolbar/>
-                <Container maxWidth="lg">
+                <Toolbar />
+                <Container>
                     {children}
                 </Container>
             </Box>

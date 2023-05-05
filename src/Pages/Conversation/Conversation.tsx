@@ -115,7 +115,7 @@ const Conversation = () => {
         setMessage(message + emoji.emoji);
     };
     return (
-        <div className={classes.messageSections}>
+        <Box>
             <ConversationNavbar conversation={conversation} isAdmin={isAdmin}/>
             {messagesLoaded ? (
                 <Box className={classes.messageContainer} ref={messageContainerRef} sx={{width: '100%'}}>
@@ -155,7 +155,7 @@ const Conversation = () => {
                     </Box>
                 )}
             </Box>
-        </div>
+        </Box>
     )
 };
 
