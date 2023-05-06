@@ -14,7 +14,7 @@ import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import * as React from "react";
 import ConversationNavbar from "./ConversationNavbar";
-import { CircularProgress } from "@mui/material";
+import {CircularProgress, Drawer, List, ListItem, ListItemButton, ListItemText, ListItemIcon} from "@mui/material";
 
 interface IConversation {
     id: number;
@@ -115,47 +115,52 @@ const Conversation = () => {
         setMessage(message + emoji.emoji);
     };
     return (
-        <Box>
-            <ConversationNavbar conversation={conversation} isAdmin={isAdmin}/>
-            {messagesLoaded ? (
-                <Box className={classes.messageContainer} ref={messageContainerRef} sx={{width: '100%'}}>
-                    <Button variant="outlined" onClick={loadMoreMessages}>Load more messages</Button>
-                    {conversation?.messages.map((message: any) => (
-                        <MessageCard message={message}
-                                     fetchMessages={fetchMessages} key={message.id}/>
-                    ))}
-                </Box>
-            ) : <CircularProgress sx={{alignItems: 'center', margin: 'auto', justifyContent: 'center', width: '100%'}} />}
-            <Box sx={{position: 'relative'}}>
-                <Paper
-                    sx={{p: '2px 4px', display: 'flex', alignItems: 'center', mb: 5}}
-                >
-                    <IconButton type="button" sx={{p: '10px'}} aria-label="send">
-                        <InsertPhotoIcon/>
-                    </IconButton>
-                    <Divider sx={{height: 28, m: 0.5}} orientation="vertical"/>
-                    <InputBase
-                        sx={{ml: 1, flex: 1}}
-                        placeholder="Message"
-                        value={message}
-                        onChange={(event) => setMessage(event.target.value)}
-                        onKeyDown={handleKeyDown}
-                    />
-                    <IconButton color="primary" sx={{p: '10px'}} onClick={() => setShowPicker(!showPicker)}>
-                        <EmojiEmotionsIcon/>
-                    </IconButton>
-                    <Divider sx={{height: 28, m: 0.5}} orientation="vertical"/>
-                    <IconButton type="button" sx={{p: '10px'}} aria-label="send" onClick={handleSendMessage}>
-                        <SendIcon/>
-                    </IconButton>
-                </Paper>
-                {showPicker && (
-                    <Box sx={{position: 'absolute', top: '-470px', right: '30px'}}>
-                        <EmojiPicker onEmojiClick={handleEmojiClick}/>
+        <>
+            <Box sx={{ml: '-17%', width: '100%'}}>
+                <ConversationNavbar conversation={conversation} isAdmin={isAdmin}/>
+                {messagesLoaded ? (
+                    <Box className={classes.messageContainer} ref={messageContainerRef}
+                         sx={{width: '100%', height: '100%'}}>
+                        <Button variant="outlined" onClick={loadMoreMessages}>Load more messages</Button>
+                        {conversation?.messages.map((message: any) => (
+                            <MessageCard message={message}
+                                         fetchMessages={fetchMessages} key={message.id}/>
+                        ))}
                     </Box>
-                )}
+                ) : <CircularProgress
+                    sx={{alignItems: 'center', margin: 'auto', justifyContent: 'center', width: '100%'}}/>}
+                <Box sx={{position: 'relative'}}>
+                    <Paper
+                        sx={{p: '2px 4px', display: 'flex'}}
+                    >
+                        <IconButton type="button" sx={{p: '10px'}} aria-label="send">
+                            <InsertPhotoIcon/>
+                        </IconButton>
+                        <Divider sx={{height: 28, m: 0.5}} orientation="vertical"/>
+                        <InputBase
+                            sx={{ml: 1, flex: 1}}
+                            placeholder="Message"
+                            value={message}
+                            onChange={(event) => setMessage(event.target.value)}
+                            onKeyDown={handleKeyDown}
+                        />
+                        <IconButton color="primary" sx={{p: '10px'}} onClick={() => setShowPicker(!showPicker)}>
+                            <EmojiEmotionsIcon/>
+                        </IconButton>
+                        <Divider sx={{height: 28, m: 0.5}} orientation="vertical"/>
+                        <IconButton type="button" sx={{p: '10px'}} aria-label="send" onClick={handleSendMessage}>
+                            <SendIcon/>
+                        </IconButton>
+                    </Paper>
+                    {showPicker && (
+                        <Box sx={{position: 'absolute', top: '-470px', right: '30px'}}>
+                            <EmojiPicker onEmojiClick={handleEmojiClick}/>
+                        </Box>
+                    )}
+                </Box>
+
             </Box>
-        </Box>
+        </>
     )
 };
 
