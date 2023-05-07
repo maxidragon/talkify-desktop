@@ -1,26 +1,77 @@
 import * as React from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import Container from '@mui/material/Container';
-import {useCallback, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
-import {Badge, Divider, ListItem, ListItemAvatar, Paper, Typography} from "@mui/material";
+import {Divider, ListItem, ListItemAvatar, Typography} from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import getUser from "../Lib/User";
+import {styled} from '@mui/material/styles';
+import MuiAppBar, {AppBarProps as MuiAppBarProps} from '@mui/material/AppBar';
+import Link from '@mui/material/Link';
+import MenuIcon from '@mui/icons-material/Menu';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
 import CreateConversation from "../Components/ModalComponents/CreateConversation";
-import SettingsIcon from '@mui/icons-material/Settings';
-import IconButton from "@mui/material/IconButton";
-import LogoutIcon from '@mui/icons-material/Logout';
-import Invitations from '../Components/ModalComponents/Invitations';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import getUser from "../Lib/User";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import Invitations from "../Components/ModalComponents/Invitations";
+import SettingsIcon from "@mui/icons-material/Settings";
+import LogoutIcon from "@mui/icons-material/Logout";
+import Drawer from './Drawer';
+
+function Copyright(props: any) {
+    return (
+        <Typography variant="body2" color="text.secondary" align="center" {...props}>
+            {'Copyright © '}
+            <Link color="inherit" href="https://mui.com/">
+                Your Website
+            </Link>{' '}
+            {new Date().getFullYear()}
+            {'.'}
+        </Typography>
+    );
+}
+
+
+
+interface AppBarProps extends MuiAppBarProps {
+    open?: boolean;
+}
+
+const AppBar = styled(MuiAppBar, {
+    shouldForwardProp: (prop) => prop !== 'open',
+})<AppBarProps>(({theme, open}) => ({
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+    }),
+    ...(open && {
+        marginLeft: 240,
+        width: `calc(100% - ${240}px)`,
+        transition: theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    }),
+}));
+
+
 
 const DashboardLayout = ({children}: any) => {
+    const [open, setOpen] = useState(true);
     const navigate = useNavigate();
     const [conversations, setConversations] = React.useState([]);
     const [invitationsNumber, setInvationsNumber] = React.useState(0);
+    const [title, setTitle] = React.useState('Talkify');
+    const toggleDrawer = () => {
+        setOpen(!open);
+    };
+
     const fetchConversations = useCallback(
         async function fetchConversations() {
             try {
@@ -121,10 +172,52 @@ const DashboardLayout = ({children}: any) => {
     return (
         <Box sx={{display: 'flex'}}>
             <CssBaseline/>
-            <Paper square sx={{pb: '50px', width: '20%'}}>
-                <Typography variant="h5" gutterBottom component="div" sx={{p: 2, pb: 0}}>
-                    Talkify
-                    <CreateConversation/>
+            <AppBar position="absolute" open={open}>
+                <Toolbar
+                    sx={{
+                        pr: '24px', // keep right padding when drawer closed
+                    }}
+                >
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={toggleDrawer}
+                        sx={{
+                            marginRight: '36px',
+                            ...(open && {display: 'none'}),
+                        }}
+                    >
+                        <MenuIcon/>
+                    </IconButton>
+                    <Typography
+                        component="h1"
+                        variant="h6"
+                        color="inherit"
+                        noWrap
+                        sx={{flexGrow: 1}}
+                    >
+                        {title}
+                    </Typography>
+                    <IconButton onClick={logout} color="inherit">
+                        <LogoutIcon/>
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
+            <Drawer variant="permanent" open={open}>
+                <Toolbar
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'flex-end',
+                        px: [1],
+                    }}
+                >
+                        <CreateConversation/>
+                    <IconButton onClick={switchTheme}>
+                        <DarkModeIcon/>
+                    </IconButton>
+                    <Invitations invitationsNumber={invitationsNumber}/>
                     <IconButton onClick={(event: any) => {
                         event.preventDefault();
                         navigate("/settings");
@@ -132,18 +225,17 @@ const DashboardLayout = ({children}: any) => {
                     }>
                         <SettingsIcon/>
                     </IconButton>
-                    <Invitations invitationsNumber={invitationsNumber}/>
-                    <IconButton onClick={switchTheme}>
-                        <DarkModeIcon/>
+
+                    <IconButton onClick={toggleDrawer}>
+                        <ChevronLeftIcon/>
                     </IconButton>
-                    <IconButton onClick={logout}>
-                        <LogoutIcon/>
-                    </IconButton>
-                </Typography>
-                <List sx={{mb: 2}}>
+                </Toolbar>
+                <Divider/>
+                <List component="nav">
                     {conversations.map((conversation: any) => (
                         <React.Fragment key={conversation.conversation.id}>
                             <ListItem button onClick={() => {
+                                setTitle(conversation.conversation.name);
                                 navigate(`/conversation/${conversation.conversation.id}`);
                             }}>
                                 <ListItemAvatar>
@@ -155,23 +247,21 @@ const DashboardLayout = ({children}: any) => {
                         </React.Fragment>
                     ))}
                 </List>
-            </Paper>
+            </Drawer>
             <Box
                 component="main"
                 sx={{
-                    backgroundColor: (theme) =>
-                        theme.palette.mode === 'light'
-                            ? theme.palette.grey[100]
-                            : theme.palette.grey[900],
                     flexGrow: 1,
                     height: '100vh',
                     overflow: 'auto',
                 }}
             >
-                <Toolbar />
-                <Container>
+                <Toolbar/>
+                <Container sx={{mt: 4, mb: 4}}>
                     {children}
+
                 </Container>
+
             </Box>
         </Box>
     )

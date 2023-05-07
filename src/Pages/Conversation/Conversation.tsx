@@ -1,3 +1,4 @@
+import * as React from "react";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {useParams} from "react-router-dom";
 import MessageCard from "../../Components/Message/MessageCard";
@@ -12,9 +13,7 @@ import IconButton from '@mui/material/IconButton';
 import SendIcon from '@mui/icons-material/Send';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
-import * as React from "react";
-import ConversationNavbar from "./ConversationNavbar";
-import {CircularProgress, Drawer, List, ListItem, ListItemButton, ListItemText, ListItemIcon} from "@mui/material";
+import {CircularProgress} from "@mui/material";
 
 interface IConversation {
     id: number;
@@ -116,8 +115,6 @@ const Conversation = () => {
     };
     return (
         <>
-            <Box sx={{ml: '-17%', width: '100%'}}>
-                <ConversationNavbar conversation={conversation} isAdmin={isAdmin}/>
                 {messagesLoaded ? (
                     <Box className={classes.messageContainer} ref={messageContainerRef}
                          sx={{width: '100%', height: '100%'}}>
@@ -158,8 +155,6 @@ const Conversation = () => {
                         </Box>
                     )}
                 </Box>
-
-            </Box>
         </>
     )
 };
