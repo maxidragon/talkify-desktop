@@ -1,51 +1,81 @@
-import {Divider, ListItemButton, ListItemIcon, ListItemText} from "@mui/material";
+import {ListItemButton, ListItemIcon, ListItemText, Typography} from "@mui/material";
 import List from "@mui/material/List";
 import * as React from "react";
-import Toolbar from "@mui/material/Toolbar";
-import CreateConversation from "../Components/ModalComponents/CreateConversation";
-import IconButton from "@mui/material/IconButton";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import SettingsIcon from "@mui/icons-material/Settings";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import {useCallback, useEffect, useState} from "react";
 import Drawer from '../Layout/Drawer';
-import DashboardIcon from "@mui/icons-material/Dashboard";
+import ConversationMembers from "../Pages/Conversation/ConversationMembers";
+import {useParams} from "react-router-dom";
+import MemberSearchBar from "../Components/SearchBar/MemberSearchBar";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import LeaveConfirmation from "../Components/Conversation/LeaveConfirmation";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
 
 const ConversationSidebar = () => {
-    const [open, setOpen] = React.useState(true);
-    const toggleDrawer = () => {
-        setOpen(!open);
-    };
+    const {conversationId} = useParams();
+    const [messagesLoaded, setMessagesLoaded] = useState(false);
+    const [searchBar, showSearchBar] = useState(false);
+
+    async function getConversationMembers() {
+        try {
+            const response = await fetch(`http://localhost:5000/conversation/${conversationId}/members`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                redirect: "follow",
+            });
+            return await response.json();
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const [isAdmin, setIsAdmin] = useState(false);
+    const fetchMessages = useCallback(
+        async function fetchMessages(paramTake: number) {
+            try {
+                const response = await fetch(`http://localhost:5000/conversation/messages/${conversationId}?skip=0&take=${paramTake}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "include",
+                    redirect: "follow",
+                });
+                const data = await response.json();
+                console.log(data);
+                setIsAdmin(data.isAdmin);
+            } catch (error) {
+                console.error(error);
+            }
+        }, [conversationId]);
+    useEffect(() => {
+        setMessagesLoaded(false);
+        fetchMessages(10);
+    }, [conversationId]);
 
     return (
-        <Drawer variant="permanent" open={open}>
-            <Toolbar
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                    px: [1],
-                }}
-            >
-                <CreateConversation/>
-                <IconButton>
-                    <DarkModeIcon/>
-                </IconButton>
-                <IconButton>
-                    <SettingsIcon/>
-                </IconButton>
+        <Drawer variant="permanent" open={true}>
+            <Box sx={{mt: 10, alignItems: 'center', width: '100%', textAlign: 'center', justifyContent: 'center'}}>
+                <Avatar alt="Profile Picture" sx={{width: 64, height: 64}}/>
+                <Typography variant="h6" component="div" sx={{mt: 2}}>test</Typography>
+            </Box>
 
-                <IconButton onClick={toggleDrawer}>
-                    <ChevronLeftIcon/>
-                </IconButton>
-            </Toolbar>
-            <Divider/>
             <List component="nav">
-                <ListItemButton>
+                <ConversationMembers handleGetMembers={getConversationMembers} isAdmin={isAdmin}/>
+                <ListItemButton onClick={() => {
+                    showSearchBar(!searchBar);
+                }
+                }>
                     <ListItemIcon>
-                        <DashboardIcon/>
+                        <PersonAddIcon/>
                     </ListItemIcon>
-                    <ListItemText primary="Dashboard"/>
+                    <ListItemText primary="Add member"/>
                 </ListItemButton>
+                {searchBar ? <MemberSearchBar conversationId={conversationId}/> : null}
+                <LeaveConfirmation/>
             </List>
         </Drawer>
     );

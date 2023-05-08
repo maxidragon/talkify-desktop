@@ -1,6 +1,5 @@
 import {useState} from "react";
 import Box from '@mui/material/Box';
-import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
@@ -12,9 +11,10 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
 export default function ConversationMembers(props: any) {
-
     const [users, setUsers] = useState<any>([]);
+    const [text, setText] = useState('');
     const fetchUsers = async (event: any) => {
+        setText(text);
         const val = event.target.value;
         await fetch(`http://localhost:5000/user/search/${val}`, {
             method: "GET",
@@ -73,7 +73,7 @@ export default function ConversationMembers(props: any) {
                     </ListItem>
                 </Box>
             )}
-            renderInput={(params) => <TextField {...params} onChange={fetchUsers} label="Search" sx={{input: {color: 'white'}}}/>}
+            renderInput={(params) => <TextField {...params} onChange={fetchUsers} value={text} label="Search" sx={{input: {color: 'black'}}}/>}
         />
     );
 }

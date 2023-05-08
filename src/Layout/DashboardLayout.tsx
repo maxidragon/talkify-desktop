@@ -22,6 +22,7 @@ import Invitations from "../Components/ModalComponents/Invitations";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Drawer from './Drawer';
+import ConversationSidebar from "./ConversationSidebar";
 
 function Copyright(props: any) {
     return (
@@ -175,7 +176,7 @@ const DashboardLayout = ({children}: any) => {
             <AppBar position="absolute" open={open}>
                 <Toolbar
                     sx={{
-                        pr: '24px', // keep right padding when drawer closed
+                        pr: '24px',
                     }}
                 >
                     <IconButton
@@ -248,6 +249,7 @@ const DashboardLayout = ({children}: any) => {
                     ))}
                 </List>
             </Drawer>
+            <ConversationSidebar />
             <Box
                 component="main"
                 sx={{

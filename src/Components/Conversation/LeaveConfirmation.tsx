@@ -1,10 +1,9 @@
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
-import {useCallback, useState} from "react";
 import * as React from "react";
+import {useCallback, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
-import {Button, Grid, Typography} from "@mui/material";
+import {Button, Grid, ListItemButton, ListItemIcon, ListItemText, Typography} from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 
 const style = {
@@ -53,9 +52,12 @@ export default function LeaveConfirmation(props: any) {
 
     return (
         <>
-            <IconButton color="inherit" onClick={handleOpen}>
-                <LogoutIcon/>
-            </IconButton>
+            <ListItemButton onClick={handleOpen}>
+                <ListItemIcon>
+                    <LogoutIcon/>
+                </ListItemIcon>
+                <ListItemText primary="Leave conversation"/>
+            </ListItemButton>
             <Modal
                 open={open}
                 onClose={handleClose}
