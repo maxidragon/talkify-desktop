@@ -11,7 +11,6 @@ import IconButton from "@mui/material/IconButton";
 import getUser from "../Lib/User";
 import {styled} from '@mui/material/styles';
 import MuiAppBar, {AppBarProps as MuiAppBarProps} from '@mui/material/AppBar';
-import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ListItemText from '@mui/material/ListItemText';
@@ -23,20 +22,6 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Drawer from './Drawer';
 import ConversationSidebar from "./ConversationSidebar";
-
-function Copyright(props: any) {
-    return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
-            {'Copyright © '}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
-
 
 
 interface AppBarProps extends MuiAppBarProps {
@@ -63,7 +48,7 @@ const AppBar = styled(MuiAppBar, {
 
 
 
-const DashboardLayout = ({children}: any) => {
+const DashboardLayout = (props: any) => {
     const [open, setOpen] = useState(true);
     const navigate = useNavigate();
     const [conversations, setConversations] = React.useState([]);
@@ -249,7 +234,7 @@ const DashboardLayout = ({children}: any) => {
                     ))}
                 </List>
             </Drawer>
-            <ConversationSidebar />
+            {props.showSidebar && <ConversationSidebar/>}
             <Box
                 component="main"
                 sx={{
@@ -260,7 +245,7 @@ const DashboardLayout = ({children}: any) => {
             >
                 <Toolbar/>
                 <Container sx={{mt: 4, mb: 4}}>
-                    {children}
+                    {props.children}
 
                 </Container>
 

@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-    createBrowserRouter,
-    RouterProvider,
-} from "react-router-dom";
+import {createBrowserRouter, RouterProvider,} from "react-router-dom";
 import Register from './Pages/Auth/Register/Register';
 import Login from './Pages/Auth/Login/Login';
 import DashboardLayout from './Layout/DashboardLayout';
@@ -31,7 +28,7 @@ const router = createBrowserRouter([
     },
     {
         path: "conversation/:conversationId",
-        element: <DashboardLayout children={<Conversation/>}/>,
+        element: <DashboardLayout children={<Conversation/>} showSidebar={true}/>,
     },
     {
         path: "settings/",

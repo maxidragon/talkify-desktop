@@ -1,4 +1,4 @@
-import {ListItemButton, ListItemIcon, ListItemText, Typography} from "@mui/material";
+import {IconButton, ListItemButton, ListItemIcon, ListItemText, Typography} from "@mui/material";
 import List from "@mui/material/List";
 import * as React from "react";
 import {useCallback, useEffect, useState} from "react";
@@ -10,11 +10,14 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import LeaveConfirmation from "../Components/Conversation/LeaveConfirmation";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
+import PhoneIcon from '@mui/icons-material/Phone';
+import VideocamIcon from '@mui/icons-material/Videocam';
 
 const ConversationSidebar = () => {
     const {conversationId} = useParams();
     const [messagesLoaded, setMessagesLoaded] = useState(false);
     const [searchBar, showSearchBar] = useState(false);
+    const [conversationName, setConversationName] = useState('Conversation');
 
     async function getConversationMembers() {
         try {
@@ -46,6 +49,7 @@ const ConversationSidebar = () => {
                 });
                 const data = await response.json();
                 console.log(data);
+                setConversationName(data.name);
                 setIsAdmin(data.isAdmin);
             } catch (error) {
                 console.error(error);
@@ -58,11 +62,19 @@ const ConversationSidebar = () => {
 
     return (
         <Drawer variant="permanent" open={true}>
-            <Box sx={{mt: 10, alignItems: 'center', width: '100%', textAlign: 'center', justifyContent: 'center'}}>
+            <Box sx={{mt: 10, alignItems: 'center', width: '100%', textAlign: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'column'}}>
                 <Avatar alt="Profile Picture" sx={{width: 64, height: 64}}/>
-                <Typography variant="h6" component="div" sx={{mt: 2}}>test</Typography>
-            </Box>
+                <Typography variant="h6" component="div" sx={{mt: 2}}>{conversationName}</Typography>
 
+            </Box>
+            <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                <IconButton>
+                    <PhoneIcon/>
+                </IconButton>
+                <IconButton>
+                    <VideocamIcon/>
+                </IconButton>
+            </Box>
             <List component="nav">
                 <ConversationMembers handleGetMembers={getConversationMembers} isAdmin={isAdmin}/>
                 <ListItemButton onClick={() => {
