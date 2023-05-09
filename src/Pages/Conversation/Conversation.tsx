@@ -14,6 +14,7 @@ import SendIcon from '@mui/icons-material/Send';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import {CircularProgress} from "@mui/material";
+import {io} from "socket.io-client";
 
 interface IConversation {
     id: number;
@@ -43,6 +44,10 @@ const Conversation = () => {
     const [take, setTake] = useState(10);
     const [showPicker, setShowPicker] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
+	const socket = io('http://localhost:5000', {
+  		withCredentials: true,
+	});
+
     const fetchMessages = useCallback(
         async function fetchMessages(paramTake: number) {
             try {
@@ -113,6 +118,23 @@ const Conversation = () => {
     const handleEmojiClick = (emoji: any) => {
         setMessage(message + emoji.emoji);
     };
+    useEffect(() => {
+        socket.on('message', (message) => {
+            setConversation((conversation) => {
+                if (conversation) {
+                    return {
+                        ...conversation,
+                        messages: [...conversation.messages, message]
+                    };
+                }
+                return conversation;
+            });
+        });
+
+        return () => {
+            socket.disconnect();
+        };
+    }, []);
     return (
         <>
                 {messagesLoaded ? (

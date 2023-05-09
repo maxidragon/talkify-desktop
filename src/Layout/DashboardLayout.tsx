@@ -22,6 +22,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Drawer from './Drawer';
 import ConversationSidebar from "./ConversationSidebar";
+import {io} from "socket.io-client";
 
 
 interface AppBarProps extends MuiAppBarProps {
@@ -57,7 +58,9 @@ const DashboardLayout = (props: any) => {
     const toggleDrawer = () => {
         setOpen(!open);
     };
-
+    const socket = io('http://localhost:5000', {
+        withCredentials: true,
+    });
     const fetchConversations = useCallback(
         async function fetchConversations() {
             try {
@@ -221,6 +224,7 @@ const DashboardLayout = (props: any) => {
                     {conversations.map((conversation: any) => (
                         <React.Fragment key={conversation.conversation.id}>
                             <ListItem button onClick={() => {
+                                socket.emit('enterConversation', `${conversation.conversation.id}`);
                                 setTitle(conversation.conversation.name);
                                 navigate(`/conversation/${conversation.conversation.id}`);
                             }}>
