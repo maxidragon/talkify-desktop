@@ -14,7 +14,7 @@ import SendIcon from '@mui/icons-material/Send';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import {CircularProgress} from "@mui/material";
-import {io} from "socket.io-client";
+import io from "socket.io-client";
 
 interface IConversation {
     id: number;
@@ -33,7 +33,7 @@ interface User {
     id: number;
     username: string;
 }
-
+const socket = io('http://localhost:5000/chat');
 const Conversation = () => {
     const {conversationId} = useParams();
     const messageContainerRef = useRef<HTMLDivElement>(null);
@@ -44,9 +44,6 @@ const Conversation = () => {
     const [take, setTake] = useState(10);
     const [showPicker, setShowPicker] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
-	const socket = io('http://localhost:5000', {
-  		withCredentials: true,
-	});
 
     const fetchMessages = useCallback(
         async function fetchMessages(paramTake: number) {
@@ -78,6 +75,8 @@ const Conversation = () => {
     useEffect(() => {
         setMessagesLoaded(false);
         fetchMessages(10);
+        socket.emit('enterConversation', conversationId);
+        console.log("enter conversation");
     }, [conversationId]);
 
 
@@ -130,53 +129,49 @@ const Conversation = () => {
                 return conversation;
             });
         });
-
-        return () => {
-            socket.disconnect();
-        };
-    }, []);
+    }, [socket]);
     return (
         <>
-                {messagesLoaded ? (
-                    <Box className={classes.messageContainer} ref={messageContainerRef}
-                         sx={{width: '100%', height: '100%'}}>
-                        <Button variant="outlined" onClick={loadMoreMessages}>Load more messages</Button>
-                        {conversation?.messages.map((message: any) => (
-                            <MessageCard message={message}
-                                         fetchMessages={fetchMessages} key={message.id}/>
-                        ))}
-                    </Box>
-                ) : <CircularProgress
-                    sx={{alignItems: 'center', margin: 'auto', justifyContent: 'center', width: '100%'}}/>}
-                <Box sx={{position: 'relative'}}>
-                    <Paper
-                        sx={{p: '2px 4px', display: 'flex'}}
-                    >
-                        <IconButton type="button" sx={{p: '10px'}} aria-label="send">
-                            <InsertPhotoIcon/>
-                        </IconButton>
-                        <Divider sx={{height: 28, m: 0.5}} orientation="vertical"/>
-                        <InputBase
-                            sx={{ml: 1, flex: 1}}
-                            placeholder="Message"
-                            value={message}
-                            onChange={(event) => setMessage(event.target.value)}
-                            onKeyDown={handleKeyDown}
-                        />
-                        <IconButton color="primary" sx={{p: '10px'}} onClick={() => setShowPicker(!showPicker)}>
-                            <EmojiEmotionsIcon/>
-                        </IconButton>
-                        <Divider sx={{height: 28, m: 0.5}} orientation="vertical"/>
-                        <IconButton type="button" sx={{p: '10px'}} aria-label="send" onClick={handleSendMessage}>
-                            <SendIcon/>
-                        </IconButton>
-                    </Paper>
-                    {showPicker && (
-                        <Box sx={{position: 'absolute', top: '-470px', right: '30px'}}>
-                            <EmojiPicker onEmojiClick={handleEmojiClick}/>
-                        </Box>
-                    )}
+            {messagesLoaded ? (
+                <Box className={classes.messageContainer} ref={messageContainerRef}
+                     sx={{width: '100%', height: '100%'}}>
+                    <Button variant="outlined" onClick={loadMoreMessages}>Load more messages</Button>
+                    {conversation?.messages.map((message: any) => (
+                        <MessageCard message={message}
+                                     fetchMessages={fetchMessages} key={message.id}/>
+                    ))}
                 </Box>
+            ) : <CircularProgress
+                sx={{alignItems: 'center', margin: 'auto', justifyContent: 'center', width: '100%'}}/>}
+            <Box sx={{position: 'relative'}}>
+                <Paper
+                    sx={{p: '2px 4px', display: 'flex'}}
+                >
+                    <IconButton type="button" sx={{p: '10px'}} aria-label="send">
+                        <InsertPhotoIcon/>
+                    </IconButton>
+                    <Divider sx={{height: 28, m: 0.5}} orientation="vertical"/>
+                    <InputBase
+                        sx={{ml: 1, flex: 1}}
+                        placeholder="Message"
+                        value={message}
+                        onChange={(event) => setMessage(event.target.value)}
+                        onKeyDown={handleKeyDown}
+                    />
+                    <IconButton color="primary" sx={{p: '10px'}} onClick={() => setShowPicker(!showPicker)}>
+                        <EmojiEmotionsIcon/>
+                    </IconButton>
+                    <Divider sx={{height: 28, m: 0.5}} orientation="vertical"/>
+                    <IconButton type="button" sx={{p: '10px'}} aria-label="send" onClick={handleSendMessage}>
+                        <SendIcon/>
+                    </IconButton>
+                </Paper>
+                {showPicker && (
+                    <Box sx={{position: 'absolute', top: '-470px', right: '30px'}}>
+                        <EmojiPicker onEmojiClick={handleEmojiClick}/>
+                    </Box>
+                )}
+            </Box>
         </>
     )
 };
