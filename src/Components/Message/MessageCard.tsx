@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {useState} from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -9,12 +10,9 @@ import DeleteConfirmation from "../ModalComponents/DeleteConfirmation";
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import InputBase from "@mui/material/InputBase";
-import * as React from "react";
 import Paper from "@mui/material/Paper";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
-import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import SendIcon from "@mui/icons-material/Send";
-import EmojiPicker from "emoji-picker-react";
 
 const MessageCard = (props: any) => {
     const [hidden, setHidden] = useState(false);
@@ -98,7 +96,9 @@ const MessageCard = (props: any) => {
                                             fontSize: '0.8rem',
                                             fontWeight: 'normal',
                                             color: '#888'
-                                        }}>{formattedTimestamp}</span>
+                                        }}>{formattedTimestamp}
+                                        {props.message.isEdited && ' (edited)'}
+                                        </span>
                                     </Typography>
                                     <Typography variant="body1">{editedMessage}</Typography>
                                 </CardContent>

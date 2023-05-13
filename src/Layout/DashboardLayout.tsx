@@ -6,7 +6,7 @@ import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import Container from '@mui/material/Container';
 import {useNavigate} from "react-router-dom";
-import {Divider, ListItem, ListItemAvatar, Typography} from "@mui/material";
+import {Badge, Divider, ListItem, ListItemAvatar, Typography} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import getUser from "../Lib/User";
 import {styled} from '@mui/material/styles';
@@ -225,7 +225,9 @@ const DashboardLayout = (props: any) => {
                                 navigate(`/conversation/${conversation.conversation.id}`);
                             }}>
                                 <ListItemAvatar>
+                                    <Badge badgeContent={conversation.conversation.numberOfUnreadMessages} color="primary">
                                     <Avatar alt="Profile Picture"/>
+                                    </Badge>
                                 </ListItemAvatar>
                                 <ListItemText primary={conversation.conversation.name}/>
                             </ListItem>

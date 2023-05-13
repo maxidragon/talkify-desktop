@@ -101,8 +101,22 @@ const Conversation = () => {
         } catch (error) {
             console.error(error);
         }
+        markMessagesAsRead();
     }
-
+    async function markMessagesAsRead() {
+        try {
+            await fetch(`http://localhost:5000/conversation/read/${conversationId}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                redirect: "follow",
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
     const loadMoreMessages = () => {
         setTake(take + 10);
         fetchMessages(take + 10);
@@ -129,6 +143,7 @@ const Conversation = () => {
                 return conversation;
             });
         });
+        markMessagesAsRead();
     }, [socket]);
     return (
         <>
