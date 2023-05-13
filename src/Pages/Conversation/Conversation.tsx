@@ -15,6 +15,7 @@ import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import {CircularProgress} from "@mui/material";
 import io from "socket.io-client";
+import {sendNotification} from "@tauri-apps/api/notification";
 
 interface IConversation {
     id: number;
@@ -76,7 +77,6 @@ const Conversation = () => {
         setMessagesLoaded(false);
         fetchMessages(10);
         socket.emit('enterConversation', conversationId);
-        console.log("enter conversation");
     }, [conversationId]);
 
 
@@ -142,6 +142,7 @@ const Conversation = () => {
                 }
                 return conversation;
             });
+         sendNotification({ title: `${message.sender.username} messaged ${conversation?.name}`, body: message?.content });
         });
         markMessagesAsRead();
     }, [socket]);
