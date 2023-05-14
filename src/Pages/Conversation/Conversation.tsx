@@ -76,6 +76,7 @@ const Conversation = () => {
     useEffect(() => {
         setMessagesLoaded(false);
         fetchMessages(10);
+        socket.emit('leaveConversation', conversation?.id);
         socket.emit('enterConversation', conversationId);
     }, [conversationId]);
 
@@ -133,6 +134,7 @@ const Conversation = () => {
     };
     useEffect(() => {
         socket.on('message', (message) => {
+            console.log(message);
             setConversation((conversation) => {
                 if (conversation) {
                     return {

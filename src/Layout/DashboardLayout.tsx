@@ -219,8 +219,7 @@ const DashboardLayout = (props: any) => {
                 <List component="nav">
                     {conversations.map((conversation: any) => (
                         <React.Fragment key={conversation.conversation.id}>
-                            <ListItem button onClick={() => {
-
+                            <ListItem button onClick={async () => {
                                 setTitle(conversation.conversation.name);
                                 navigate(`/conversation/${conversation.conversation.id}`);
                             }}>
