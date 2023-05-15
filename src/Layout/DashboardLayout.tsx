@@ -21,7 +21,6 @@ import Invitations from "../Components/ModalComponents/Invitations";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Drawer from './Drawer';
-import ConversationSidebar from "./ConversationSidebar";
 
 
 interface AppBarProps extends MuiAppBarProps {
@@ -235,7 +234,7 @@ const DashboardLayout = (props: any) => {
                     ))}
                 </List>
             </Drawer>
-            {props.showSidebar && <ConversationSidebar/>}
+            {props.sidebar}
             <Box
                 component="main"
                 sx={{

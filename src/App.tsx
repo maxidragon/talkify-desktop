@@ -8,6 +8,9 @@ import Conversation from './Pages/Conversation/Conversation';
 import Settings from './Pages/Settings/Settings';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import getUser from "./Lib/User";
+import ConversationSidebar from "./Layout/ConversationSidebar";
+import SettingsSidebar from "./Layout/SettingsSidebar";
+import ChangePassword from "./Pages/Settings/ChangePassword";
 
 const router = createBrowserRouter([
     // {
@@ -28,11 +31,15 @@ const router = createBrowserRouter([
     },
     {
         path: "conversation/:conversationId",
-        element: <DashboardLayout children={<Conversation/>} showSidebar={true}/>,
+        element: <DashboardLayout children={<Conversation/>} sidebar={<ConversationSidebar/>}/>,
     },
     {
         path: "settings/",
-        element: <DashboardLayout children={<Settings/>}/>,
+        element: <DashboardLayout children={<Settings/>} sidebar={<SettingsSidebar/>}/>,
+    },
+    {
+        path: "settings/password",
+        element: <DashboardLayout children={<ChangePassword/>} sidebar={<SettingsSidebar/>}/>,
     }
 ]);
 const darkTheme = createTheme({
@@ -45,11 +52,12 @@ const lightTheme = createTheme({
         mode: 'light',
     },
 });
+
 function App() {
     const user = getUser();
 
     return (
-        <ThemeProvider theme={user.Theme==="dark" ? darkTheme : lightTheme}>
+        <ThemeProvider theme={user.Theme === "dark" ? darkTheme : lightTheme}>
             <RouterProvider router={router}/>
         </ThemeProvider>
     );
