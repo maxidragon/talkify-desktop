@@ -2,10 +2,10 @@ import Box from '@mui/material/Box';
 import CreateIcon from '@mui/icons-material/Create';
 import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
-import {useCallback, useState} from "react";
 import * as React from "react";
+import {useCallback, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {Button, TextField, Grid, Typography} from "@mui/material";
+import {Button, Grid, TextField, Typography} from "@mui/material";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -25,8 +25,7 @@ export default function CreateConversation(props: any) {
 
     async function handleOpen() {
         setOpen(true)
-        console.log(props.handleGetMembers());
-    };
+    }
     const createConversation = useCallback(
         async function createConversation(nameParam: string) {
             try {
@@ -47,6 +46,7 @@ export default function CreateConversation(props: any) {
                     navigate("/auth/login");
                 } else {
                     handleClose();
+                    await props.fetchConversations();
                     console.log(data);
                 }
             } catch (error) {

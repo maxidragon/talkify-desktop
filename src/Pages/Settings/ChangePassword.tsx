@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useState} from 'react';
-import {Button, Grid, TextField, Typography} from "@mui/material";
+import {Alert, Button, Grid, Snackbar, TextField, Typography} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 
 const ChangePassword = () => {
@@ -8,6 +8,7 @@ const ChangePassword = () => {
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [repeatNewPassword, setRepeatNewPassword] = useState("");
+    const [open, setOpen] = useState(false);
 
     async function changePassword() {
         try {
@@ -26,12 +27,11 @@ const ChangePassword = () => {
                 credentials: "include",
                 redirect: "follow",
             });
-            //TOOD
-            //Show notification that password has been changed (or not)
             const data = await response.json();
             if (response.status === 401) {
                 navigate("/auth/login");
-            } else {
+            } else if (response.status === 201) {
+                setOpen(true);
                 console.log(data);
             }
         } catch (error) {
@@ -69,7 +69,15 @@ const ChangePassword = () => {
                     </Grid>
                 </>
             </Grid>
-
+            <Snackbar open={open} autoHideDuration={6000} onClose={() => {
+                setOpen(false)
+            }}>
+                <Alert onClose={() => {
+                    setOpen(false);
+                }} severity="success" sx={{width: '100%'}}>
+                    Successfully changed password!
+                </Alert>
+            </Snackbar>
         </Grid>
     );
 }

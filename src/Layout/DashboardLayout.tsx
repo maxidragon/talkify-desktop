@@ -197,7 +197,7 @@ const DashboardLayout = (props: any) => {
                         px: [1],
                     }}
                 >
-                        <CreateConversation/>
+                        <CreateConversation fetchConversations={fetchConversations}/>
                     <IconButton onClick={switchTheme}>
                         <DarkModeIcon/>
                     </IconButton>

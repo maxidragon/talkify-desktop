@@ -1,12 +1,14 @@
 import * as React from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {Button, CircularProgress, Grid, TextField, Typography} from "@mui/material";
-import {useCallback, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import SuccessNotification from "../../Components/Notifications/SuccessNotification";
 
 const Settings = () => {
     const navigate = useNavigate();
     const [settings, setSettings] = useState<any>();
     const [isLoading, setIsLoading] = useState(true);
+    const [open, setOpen] = useState(false);
     const fetchSettings = useCallback(
         async function fetchSettings() {
             try {
@@ -37,6 +39,7 @@ const Settings = () => {
     const updateSettings = useCallback(
         async function updateSettings() {
             try {
+                setOpen(false);
                 const response = await fetch("http://localhost:5000/user/settings", {
                     method: "PUT",
                     headers: {
@@ -50,6 +53,7 @@ const Settings = () => {
                 if (response.status === 401) {
                     navigate("/auth/login");
                 } else {
+                    setOpen(true);
                     console.log(data);
                 }
             } catch (error) {
@@ -92,7 +96,7 @@ const Settings = () => {
                     </>
                 )}
             </Grid>
-
+            {open && <SuccessNotification message={"Succesfully updated settings"}/>}
         </Grid>
     );
 }
