@@ -7,7 +7,7 @@ import ConversationMembers from "../Pages/Conversation/ConversationMembers";
 import {useParams} from "react-router-dom";
 import MemberSearchBar from "../Components/SearchBar/MemberSearchBar";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import LeaveConfirmation from "../Components/Conversation/LeaveConfirmation";
+import LeaveConfirmation from "../Components/ModalComponents/LeaveConfirmation";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import PhoneIcon from '@mui/icons-material/Phone';

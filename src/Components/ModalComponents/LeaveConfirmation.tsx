@@ -42,6 +42,8 @@ export default function LeaveConfirmation(props: any) {
                     navigate("/auth/login");
                 } else {
                     handleClose();
+                    navigate('/');
+                    window.location.reload();
                 }
             } catch (error) {
                 navigate("/auth/login");

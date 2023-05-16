@@ -8,18 +8,19 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {useNavigate, useParams} from "react-router-dom";
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import PeopleIcon from "@mui/icons-material/People";
+import SuccessNotification from "../../Components/Notifications/SuccessNotification";
 
 export default function ConversationMembers(props: any) {
     const [open, setOpen] = useState(false);
     const [members, setMembers] = useState([]);
-
+    const [openNotification, setOpenNotification] = useState(false);
     const {conversationId} = useParams();
     const navigate = useNavigate();
 
     async function toggleMembers() {
-            setOpen(!open);
-            setMembers(await props.handleGetMembers());
-            console.log(members);
+        setOpen(!open);
+        setMembers(await props.handleGetMembers());
+        console.log(members);
     }
 
     async function handleDeleteMember(id: Number) {
@@ -41,8 +42,10 @@ export default function ConversationMembers(props: any) {
             console.error(error);
         }
     }
+
     async function addAdmin(id: Number) {
         try {
+            setOpenNotification(false);
             const response = await fetch(`http://localhost:5000/conversation/admin`, {
                 method: "POST",
                 headers: {
@@ -58,12 +61,14 @@ export default function ConversationMembers(props: any) {
             if (response.status === 401) {
                 navigate("/auth/login");
             } else {
+                setOpenNotification(true);
                 handleClose();
             }
         } catch (error) {
             console.error(error);
         }
     }
+
     async function removeAdmin(id: Number) {
         try {
             const response = await fetch(`http://localhost:5000/conversation/admin?userId=${id}&conversationId=${conversationId}`, {
@@ -95,43 +100,45 @@ export default function ConversationMembers(props: any) {
                 <ListItemText primary="Members"/>
             </ListItemButton>
             {open && (
-                    members.map((member: any) => (
-                        <ListItem key={member.user.id}>
-                            <ListItemAvatar>
-                                <Avatar alt="Profile Picture"/>
-                            </ListItemAvatar>
-                            {member.isAdmin ? (
-                                    <ListItemText primary={member.user.username} secondary={"Admin"} />
-                                ) : (
-                                <ListItemText primary={member.user.username} secondary={("Added by " + member.addedBy.username)}/>
-                            )}
-                            {props.isAdmin ? (
-                                <>
+                members.map((member: any) => (
+                    <ListItem key={member.user.id}>
+                        <ListItemAvatar>
+                            <Avatar alt="Profile Picture"/>
+                        </ListItemAvatar>
+                        {member.isAdmin ? (
+                            <ListItemText primary={member.user.username} secondary={"Admin"}/>
+                        ) : (
+                            <ListItemText primary={member.user.username}
+                                          secondary={("Added by " + member.addedBy.username)}/>
+                        )}
+                        {props.isAdmin ? (
+                            <>
 
-                                    {member.isAdmin ? (
-                                        <IconButton color="inherit" onClick={async () => {
-                                            await removeAdmin(member.user.id);
-                                        }}>
-                                            <StarOutlineIcon/>
-                                        </IconButton>
-                                    ) : (
-                                        <IconButton color="inherit" onClick={async () => {
-                                            await addAdmin(member.user.id);
-                                        }}>
-                                            <StarIcon/>
-                                        </IconButton>
-                                    )
-                                    }
-                                    <IconButton color="inherit" onClick={() => {
-                                        handleDeleteMember(member.user.id);
+                                {member.isAdmin ? (
+                                    <IconButton color="inherit" onClick={async () => {
+                                        await removeAdmin(member.user.id);
                                     }}>
-                                        <DeleteIcon/>
+                                        <StarOutlineIcon/>
                                     </IconButton>
-                                </>
-                            ) : <></>}
-                        </ListItem>
-                    ))
-                )}
+                                ) : (
+                                    <IconButton color="inherit" onClick={async () => {
+                                        await addAdmin(member.user.id);
+                                    }}>
+                                        <StarIcon/>
+                                    </IconButton>
+                                )
+                                }
+                                <IconButton color="inherit" onClick={() => {
+                                    handleDeleteMember(member.user.id);
+                                }}>
+                                    <DeleteIcon/>
+                                </IconButton>
+                            </>
+                        ) : <></>}
+                    </ListItem>
+                ))
+            )}
+            {openNotification && <SuccessNotification message={"This member is now an admin of this conversation"}/>}
         </>
     );
 }
