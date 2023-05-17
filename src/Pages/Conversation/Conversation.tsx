@@ -16,6 +16,7 @@ import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import {CircularProgress} from "@mui/material";
 import io from "socket.io-client";
 import {sendNotification} from "@tauri-apps/api/notification";
+import SystemMessage from "../../Components/Message/SystemMessage";
 
 interface IConversation {
     id: number;
@@ -34,6 +35,7 @@ interface User {
     id: number;
     username: string;
 }
+
 const socket = io('http://localhost:5000/chat');
 const Conversation = () => {
     const {conversationId} = useParams();
@@ -104,6 +106,7 @@ const Conversation = () => {
         }
         markMessagesAsRead();
     }
+
     async function markMessagesAsRead() {
         try {
             await fetch(`http://localhost:5000/conversation/read/${conversationId}`, {
@@ -118,6 +121,7 @@ const Conversation = () => {
             console.error(error);
         }
     }
+
     const loadMoreMessages = () => {
         setTake(take + 10);
         fetchMessages(take + 10);
@@ -144,7 +148,10 @@ const Conversation = () => {
                 }
                 return conversation;
             });
-         sendNotification({ title: `${message.sender.username} messaged ${conversation?.name}`, body: message?.content });
+            sendNotification({
+                title: `${message.sender.username} messaged ${conversation?.name}`,
+                body: message?.content
+            });
         });
         markMessagesAsRead();
     }, [socket]);
@@ -155,8 +162,10 @@ const Conversation = () => {
                      sx={{width: '100%', height: '100%'}}>
                     <Button variant="outlined" onClick={loadMoreMessages}>Load more messages</Button>
                     {conversation?.messages.map((message: any) => (
-                        <MessageCard message={message}
-                                     fetchMessages={fetchMessages} key={message.id}/>
+                            message?.sender.id === 0 ? (<SystemMessage message={message}/>) : (
+                                <MessageCard message={message}
+                                             fetchMessages={fetchMessages} key={message.id}/>
+                            )
                     ))}
                 </Box>
             ) : <CircularProgress
