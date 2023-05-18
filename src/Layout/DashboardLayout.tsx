@@ -46,15 +46,18 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 
-
 const DashboardLayout = (props: any) => {
     const [open, setOpen] = useState(true);
+    const [openSidebar, setOpenSidebar] = useState(true);
     const navigate = useNavigate();
     const [conversations, setConversations] = React.useState([]);
     const [invitationsNumber, setInvationsNumber] = React.useState(0);
     const [title, setTitle] = React.useState('Talkify');
     const toggleDrawer = () => {
         setOpen(!open);
+    };
+    const toggleSidebar = () => {
+        setOpenSidebar(!openSidebar);
     };
     const fetchConversations = useCallback(
         async function fetchConversations() {
@@ -174,6 +177,16 @@ const DashboardLayout = (props: any) => {
                     >
                         <MenuIcon/>
                     </IconButton>
+                    <IconButton
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        sx={{mr: 2}}
+                        onClick={toggleSidebar}
+                    >
+                        <MenuIcon/>
+                    </IconButton>
                     <Typography
                         component="h1"
                         variant="h6"
@@ -197,7 +210,7 @@ const DashboardLayout = (props: any) => {
                         px: [1],
                     }}
                 >
-                        <CreateConversation fetchConversations={fetchConversations}/>
+                    <CreateConversation fetchConversations={fetchConversations}/>
                     <IconButton onClick={switchTheme}>
                         <DarkModeIcon/>
                     </IconButton>
@@ -223,8 +236,9 @@ const DashboardLayout = (props: any) => {
                                 navigate(`/conversation/${conversation.conversation.id}`);
                             }}>
                                 <ListItemAvatar>
-                                    <Badge badgeContent={conversation.conversation.numberOfUnreadMessages} color="primary">
-                                    <Avatar alt="Profile Picture"/>
+                                    <Badge badgeContent={conversation.conversation.numberOfUnreadMessages}
+                                           color="primary">
+                                        <Avatar alt="Profile Picture"/>
                                     </Badge>
                                 </ListItemAvatar>
                                 <ListItemText primary={conversation.conversation.name}/>
@@ -234,7 +248,7 @@ const DashboardLayout = (props: any) => {
                     ))}
                 </List>
             </Drawer>
-            {props.sidebar}
+            {openSidebar && props.sidebar}
             <Box
                 component="main"
                 sx={{

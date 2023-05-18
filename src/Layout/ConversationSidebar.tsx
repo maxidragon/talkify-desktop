@@ -61,7 +61,7 @@ const ConversationSidebar = () => {
     }, [conversationId]);
 
     return (
-        <Drawer variant="permanent" open={true}>
+        <Drawer variant="permanent" open={true} width={300}>
             <Box sx={{mt: 10, alignItems: 'center', width: '100%', textAlign: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'column'}}>
                 <Avatar alt="Profile Picture" sx={{width: 64, height: 64}}/>
                 <Typography variant="h6" component="div" sx={{mt: 2}}>{conversationName}</Typography>
