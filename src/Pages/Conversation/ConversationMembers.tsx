@@ -9,6 +9,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import PeopleIcon from "@mui/icons-material/People";
 import SuccessNotification from "../../Components/Notifications/SuccessNotification";
+import {useConfirm} from "material-ui-confirm";
 
 export default function ConversationMembers(props: any) {
     const [open, setOpen] = useState(false);
@@ -16,6 +17,7 @@ export default function ConversationMembers(props: any) {
     const [openNotification, setOpenNotification] = useState(false);
     const {conversationId} = useParams();
     const navigate = useNavigate();
+    const confirm = useConfirm();
 
     async function toggleMembers() {
         setOpen(!open);
@@ -25,19 +27,24 @@ export default function ConversationMembers(props: any) {
 
     async function handleDeleteMember(id: Number) {
         try {
-            const response = await fetch(`http://localhost:5000/conversation/remove?userId=${id}&conversationId=${conversationId}`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                credentials: "include",
-                redirect: "follow"
-            });
-            if (response.status === 401) {
-                navigate("/auth/login");
-            } else {
-                handleClose();
-            }
+            confirm({description: "Are you sure you want to remove this member from the conversation?"}).then(async () => {
+                const response = await fetch(`http://localhost:5000/conversation/remove?userId=${id}&conversationId=${conversationId}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "include",
+                    redirect: "follow"
+                });
+                if (response.status === 401) {
+                    navigate("/auth/login");
+                } else {
+                    handleClose();
+                }
+            }).catch((error) => {
+                    console.error(error);
+                }
+            );
         } catch (error) {
             console.error(error);
         }
@@ -46,24 +53,31 @@ export default function ConversationMembers(props: any) {
     async function addAdmin(id: Number) {
         try {
             setOpenNotification(false);
-            const response = await fetch(`http://localhost:5000/conversation/admin`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    userId: id,
-                    conversationId: conversationId
-                }),
-                credentials: "include",
-                redirect: "follow"
-            });
-            if (response.status === 401) {
-                navigate("/auth/login");
-            } else {
-                setOpenNotification(true);
-                handleClose();
-            }
+            confirm({description: "Are you sure you want to make this user an admin of this conversation?"}).then(async () => {
+                    const response = await fetch(`http://localhost:5000/conversation/admin`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            userId: id,
+                            conversationId: conversationId
+                        }),
+                        credentials: "include",
+                        redirect: "follow"
+                    });
+                    if (response.status === 401) {
+                        navigate("/auth/login");
+                    } else {
+                        setOpenNotification(true);
+                        handleClose();
+                    }
+                }
+            ).catch((error) => {
+                    console.error(error);
+                }
+            );
+
         } catch (error) {
             console.error(error);
         }
@@ -71,19 +85,24 @@ export default function ConversationMembers(props: any) {
 
     async function removeAdmin(id: Number) {
         try {
-            const response = await fetch(`http://localhost:5000/conversation/admin?userId=${id}&conversationId=${conversationId}`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                credentials: "include",
-                redirect: "follow"
-            });
-            if (response.status === 401) {
-                navigate("/auth/login");
-            } else {
-                handleClose();
-            }
+            confirm({description: "Are you sure you want to remove this user as admin of this conversation?"}).then(async () => {
+                const response = await fetch(`http://localhost:5000/conversation/admin?userId=${id}&conversationId=${conversationId}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "include",
+                    redirect: "follow"
+                });
+                if (response.status === 401) {
+                    navigate("/auth/login");
+                } else {
+                    handleClose();
+                }
+            }).catch((error) => {
+                    console.error(error);
+                }
+            );
         } catch (error) {
             console.error(error);
         }

@@ -11,6 +11,7 @@ import getUser from "./Lib/User";
 import ConversationSidebar from "./Layout/ConversationSidebar";
 import SettingsSidebar from "./Layout/SettingsSidebar";
 import ChangePassword from "./Pages/Settings/ChangePassword";
+import {ConfirmProvider} from "material-ui-confirm";
 
 const router = createBrowserRouter([
     // {
@@ -58,7 +59,9 @@ function App() {
 
     return (
         <ThemeProvider theme={user.Theme === "dark" ? darkTheme : lightTheme}>
-            <RouterProvider router={router}/>
+            <ConfirmProvider>
+                <RouterProvider router={router}/>
+            </ConfirmProvider>
         </ThemeProvider>
     );
 }

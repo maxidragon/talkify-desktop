@@ -4,21 +4,23 @@ import * as React from "react";
 import {useCallback, useEffect, useState} from "react";
 import Drawer from '../Layout/Drawer';
 import ConversationMembers from "../Pages/Conversation/ConversationMembers";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import MemberSearchBar from "../Components/SearchBar/MemberSearchBar";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import LeaveConfirmation from "../Components/ModalComponents/LeaveConfirmation";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import PhoneIcon from '@mui/icons-material/Phone';
 import VideocamIcon from '@mui/icons-material/Videocam';
+import {useConfirm} from "material-ui-confirm";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const ConversationSidebar = () => {
     const {conversationId} = useParams();
     const [messagesLoaded, setMessagesLoaded] = useState(false);
     const [searchBar, showSearchBar] = useState(false);
     const [conversationName, setConversationName] = useState('Conversation');
-
+    const confirm = useConfirm();
+    const navigate = useNavigate();
     async function getConversationMembers() {
         try {
             const response = await fetch(`http://localhost:5000/conversation/${conversationId}/members`, {
@@ -33,6 +35,29 @@ const ConversationSidebar = () => {
         } catch (error) {
             console.error(error);
         }
+    }
+
+    async function leaveConversation() {
+        confirm({description: "Are you sure you want to leave this conversation?"}).then(async () => {
+            const response = await fetch(`http://localhost:5000/conversation/leave/${conversationId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                redirect: "follow",
+            });
+            if (response.status === 401) {
+                navigate("/auth/login");
+            } else {
+                navigate('/');
+                window.location.reload();
+            }
+        }).catch((error) => {
+                console.error(error);
+            }
+        );
+
     }
 
     const [isAdmin, setIsAdmin] = useState(false);
@@ -62,10 +87,17 @@ const ConversationSidebar = () => {
 
     return (
         <Drawer variant="permanent" open={true} width={300}>
-            <Box sx={{mt: 10, alignItems: 'center', width: '100%', textAlign: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'column'}}>
+            <Box sx={{
+                mt: 10,
+                alignItems: 'center',
+                width: '100%',
+                textAlign: 'center',
+                justifyContent: 'center',
+                display: 'flex',
+                flexDirection: 'column'
+            }}>
                 <Avatar alt="Profile Picture" sx={{width: 64, height: 64}}/>
                 <Typography variant="h6" component="div" sx={{mt: 2}}>{conversationName}</Typography>
-
             </Box>
             <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                 <IconButton>
@@ -87,7 +119,12 @@ const ConversationSidebar = () => {
                     <ListItemText primary="Add member"/>
                 </ListItemButton>
                 {searchBar ? <MemberSearchBar conversationId={conversationId}/> : null}
-                <LeaveConfirmation/>
+                <ListItemButton onClick={leaveConversation}>
+                    <ListItemIcon>
+                        <LogoutIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="Leave conversation"/>
+                </ListItemButton>
             </List>
         </Drawer>
     );

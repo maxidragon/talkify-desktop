@@ -6,18 +6,22 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Avatar from '@mui/material/Avatar';
-import DeleteConfirmation from "../ModalComponents/DeleteConfirmation";
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import InputBase from "@mui/material/InputBase";
 import Paper from "@mui/material/Paper";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import SendIcon from "@mui/icons-material/Send";
+import {useConfirm} from "material-ui-confirm";
+import {useNavigate} from "react-router-dom";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const MessageCard = (props: any) => {
     const [hidden, setHidden] = useState(false);
     const [isEdited, setIsEdited] = useState(false);
     const [editedMessage, setEditedMessage] = useState(props.message.content);
+    const confirm = useConfirm();
+    const navigate = useNavigate();
     const formatDate = (date: Date) => {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -51,12 +55,32 @@ const MessageCard = (props: any) => {
             console.error(error);
         }
     }
+    async function deleteMessage() {
+        confirm({description: "Are you sure you want to delete this message?"}).then(async () => {
+            const response = await fetch(`http://localhost:5000/message/delete/${props.id}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                redirect: "follow",
+            });
+            if (response.status === 401) {
+                navigate("/auth/login");
+            }
+            else {
+                setHidden(true);
+            }
 
+        }).catch((error) => {
+            console.error(error);
+        }
+    );
+    }
     return (
         <>
             {
                 hidden ? <></> : (
-
                     <Card sx={{display: 'flex', marginBottom: 1}}>
                         {isEdited ? (
                             <>
@@ -108,7 +132,9 @@ const MessageCard = (props: any) => {
                                             <IconButton onClick={handleEdit}>
                                                 <EditIcon/>
                                             </IconButton>
-                                            <DeleteConfirmation id={props.message.id} handleDelete={handleDelete}/>
+                                            <IconButton aria-label="delete" onClick={deleteMessage}>
+                                                <DeleteIcon/>
+                                            </IconButton>
                                         </>
                                     ) : <></>}
                                 </Box>
